@@ -34,7 +34,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Pastille> pastList = [];
+  List<String> pastList = [];
+  List<String> accepted = [];
   List<String> letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   @override
   Widget build(BuildContext context) {
@@ -46,9 +47,38 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           children: [
+            Container(
+              height: 70,
+              width: 500,
+              color: Colors.amber,
+              child: DragTarget<String>(
+                onWillAccept: (letter) => letter != null,
+                onAccept: (letter) => setState(() {
+                  pastList.removeWhere((element) => element == letter);
+                  accepted.add(letter);
+                }),
+                onLeave: null,
+                builder: (context, candidates, rejected) => Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: accepted
+                      .map((e) => Draggable<String>(
+                            data: e,
+                            feedback: Pastille(lettre: e),
+                            child: Pastille(lettre: e),
+                          ))
+                      .toList(),
+                ),
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: pastList,
+              children: pastList
+                  .map((e) => Draggable<String>(
+                        data: e,
+                        feedback: Pastille(lettre: e),
+                        child: Pastille(lettre: e),
+                      ))
+                  .toList(),
             ),
           ],
         ),
@@ -57,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: () {
           int rnd = Random().nextInt(letters.length);
           setState(() {
-            pastList.add(Pastille(lettre: letters[rnd]));
+            pastList.add(letters[rnd]);
           });
         },
         tooltip: 'Increment',
