@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:anagram/pastille.dart';
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Anagram'),
     );
   }
 }
@@ -35,8 +34,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<int> nbList = [];
   List<Pastille> pastList = [];
+  List<String> letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +46,6 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           children: [
-            Row(children: nbList.map((nb) => Text(nb.toString())).toList()),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: pastList,
@@ -57,14 +55,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          pastList.clear();
-          int rnd = Random().nextInt(26);
+          int rnd = Random().nextInt(letters.length);
           setState(() {
-            nbList.add(rnd);
-            for (int nb in nbList) {
-              pastList.add(Pastille(lettre: nb.toString()));
-              print(nb);
-            }
+            pastList.add(Pastille(lettre: letters[rnd]));
           });
         },
         tooltip: 'Increment',
