@@ -1,3 +1,7 @@
+import 'dart:ffi';
+import 'dart:math';
+
+import 'package:anagram/pastille.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -31,14 +35,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
+  List<int> nbList = [];
+  List<Pastille> pastList = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,20 +46,27 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+          children: [
+            Row(children: nbList.map((nb) => Text(nb.toString())).toList()),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: pastList,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+          pastList.clear();
+          int rnd = Random().nextInt(26);
+          setState(() {
+            nbList.add(rnd);
+            for (int nb in nbList) {
+              pastList.add(Pastille(lettre: nb.toString()));
+              print(nb);
+            }
+          });
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
