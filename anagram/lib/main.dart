@@ -34,8 +34,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> pastList = [];
-  List<String> accepted = [];
+  List<Pastille> pastList = [];
+  List<Pastille> accepted = [];
   List<String> letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   @override
   Widget build(BuildContext context) {
@@ -48,53 +48,51 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            DragTarget<String>(
-              onWillAccept: (letter) => letter != null,
-              onAccept: (letter) => setState(() {
-                pastList.removeWhere((element) => element == letter);
-                accepted.add(letter);
+            DragTarget<Pastille>(
+              onWillAccept: (pastille) => pastille != null,
+              onAccept: (pastille) => setState(() {
+                pastList.removeWhere((pastilleOld) => pastille == pastilleOld);
+                accepted.add(pastille);
               }),
               onLeave: null,
               builder: (context, candidates, rejected) => Container(
                 height: 70,
                 width: 500,
                 color: candidates.isEmpty ? Colors.grey : Colors.amber,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: accepted
-                      .map(
-                        (e) => Pastille(
-                          lettre: e,
-                          color: Colors.red,
-                        ),
-                      )
-                      .toList(),
+                child: ReorderableListView(
+                  scrollDirection: Axis.horizontal,
+                  onReorder: (int oldIndex, int newIndex) {
+                    setState(() {
+                      if (oldIndex < newIndex) {
+                        newIndex -= 1;
+                      }
+                      final Pastille item = accepted.removeAt(oldIndex);
+                      accepted.insert(newIndex, item);
+                    });
+                  },
+                  children: accepted,
                 ),
               ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: pastList
-                  .map((e) => Draggable<String>(
-                        data: e,
-                        feedback: Pastille(
-                          lettre: e,
+                  .map(
+                    (pastille) => Draggable<Pastille>(
+                      data: pastille,
+                      feedback: pastille
+                      /*Pastille(
+                          lettre: pastille.lettre,
                           color: Colors.grey,
-                        ),
-                        childWhenDragging: Opacity(
-                          opacity: 0.5,
-                          child: Pastille(
-                            lettre: e,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        child: Material(
-                          child: Pastille(
-                            lettre: e,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ))
+                        )*/
+                      ,
+                      childWhenDragging: Opacity(
+                        opacity: 0.5,
+                        child: pastille,
+                      ),
+                      child: pastille,
+                    ),
+                  )
                   .toList(),
             ),
           ],
@@ -104,7 +102,15 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: () {
           int rnd = Random().nextInt(letters.length);
           setState(() {
-            pastList.add(letters[rnd]);
+            pastList.add(
+              Pastille(
+                lettre: letters[rnd],
+                color: Colors.blue,
+                key: Key(
+                  DateTime.now().millisecondsSinceEpoch.toString(),
+                ),
+              ),
+            );
           });
         },
         tooltip: 'Increment',
