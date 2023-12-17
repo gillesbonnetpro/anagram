@@ -46,26 +46,28 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              height: 70,
-              width: 500,
-              color: Colors.amber,
-              child: DragTarget<String>(
-                onWillAccept: (letter) => letter != null,
-                onAccept: (letter) => setState(() {
-                  pastList.removeWhere((element) => element == letter);
-                  accepted.add(letter);
-                }),
-                onLeave: null,
-                builder: (context, candidates, rejected) => Row(
+            DragTarget<String>(
+              onWillAccept: (letter) => letter != null,
+              onAccept: (letter) => setState(() {
+                pastList.removeWhere((element) => element == letter);
+                accepted.add(letter);
+              }),
+              onLeave: null,
+              builder: (context, candidates, rejected) => Container(
+                height: 70,
+                width: 500,
+                color: candidates.isEmpty ? Colors.grey : Colors.amber,
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: accepted
-                      .map((e) => Draggable<String>(
-                            data: e,
-                            feedback: Pastille(lettre: e),
-                            child: Pastille(lettre: e),
-                          ))
+                      .map(
+                        (e) => Pastille(
+                          lettre: e,
+                          color: Colors.red,
+                        ),
+                      )
                       .toList(),
                 ),
               ),
@@ -75,8 +77,23 @@ class _MyHomePageState extends State<MyHomePage> {
               children: pastList
                   .map((e) => Draggable<String>(
                         data: e,
-                        feedback: Pastille(lettre: e),
-                        child: Pastille(lettre: e),
+                        feedback: Pastille(
+                          lettre: e,
+                          color: Colors.grey,
+                        ),
+                        childWhenDragging: Opacity(
+                          opacity: 0.5,
+                          child: Pastille(
+                            lettre: e,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        child: Material(
+                          child: Pastille(
+                            lettre: e,
+                            color: Colors.blue,
+                          ),
+                        ),
                       ))
                   .toList(),
             ),

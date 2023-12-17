@@ -2,24 +2,30 @@ import 'package:flutter/material.dart';
 
 class Pastille extends StatelessWidget {
   final String lettre;
-  const Pastille({super.key, required this.lettre});
+  final Color color;
+
+  const Pastille({super.key, required this.lettre, required this.color});
 
   @override
   Widget build(BuildContext context) {
     TextStyle style = const TextStyle(
-        color: Colors.white, fontWeight: FontWeight.w500, fontSize: 50);
+        color: Colors.white,
+        fontWeight: FontWeight.w500,
+        fontSize: 50,
+        decoration: TextDecoration.none);
     return Container(
       width: 100.0,
       height: 100.0,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.blue,
+        color: color,
       ),
       child: Center(
-          child: Text(
-        lettre,
-        style: style,
-      )),
+        child: Text(
+          lettre,
+          style: style,
+        ),
+      ),
     );
   }
 }
