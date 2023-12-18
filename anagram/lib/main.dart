@@ -85,17 +85,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   .map(
                     (pastille) => Draggable<Pastille>(
                       data: pastille,
-                      feedback: pastille
-                      /*Pastille(
-                          lettre: pastille.lettre,
-                          color: Colors.grey,
-                        )*/
-                      ,
+                      feedback: pastille,
                       childWhenDragging: Opacity(
                         opacity: 0.5,
                         child: pastille,
                       ),
                       child: pastille,
+                      onDragCompleted: () {
+                        setState(() {
+                          pastList.removeWhere((past) => past == pastille);
+                        });
+                      },
                     ),
                   )
                   .toList(),
@@ -111,9 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Pastille(
                 lettre: letters[rnd],
                 color: Colors.blue,
-                key: Key(
-                  DateTime.now().millisecondsSinceEpoch.toString(),
-                ),
+                key: UniqueKey(),
               ),
             );
           });

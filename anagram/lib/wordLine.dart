@@ -9,23 +9,24 @@ class WordLine extends StatefulWidget {
 }
 
 class _WordLineState extends State<WordLine> {
-  List<Pastille> pastList = [];
+  /*List<Pastille> pastList = [];*/
   List<Pastille> accepted = [];
 
   @override
   Widget build(BuildContext context) {
     return DragTarget<Pastille>(
-      onWillAccept: (pastille) => pastille != null,
+      onWillAccept: (pastille) => accepted.length < 6,
       onAccept: (pastille) => setState(() {
-        pastList.removeWhere((pastilleOld) => pastille == pastilleOld);
+        /* pastList.removeWhere((pastilleOld) => pastille == pastilleOld);*/
         accepted.add(pastille);
       }),
       onLeave: null,
       builder: (context, candidates, rejected) => Container(
         height: 70,
-        width: 500,
+        width: 700,
         color: candidates.isEmpty ? Colors.grey : Colors.amber,
         child: ReorderableListView(
+          buildDefaultDragHandles: true,
           scrollDirection: Axis.horizontal,
           onReorder: (int oldIndex, int newIndex) {
             setState(() {

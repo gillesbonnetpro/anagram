@@ -4,9 +4,7 @@ class Pastille extends StatelessWidget {
   final String lettre;
   final Color color;
 
-  Pastille({super.key, required this.lettre, required this.color}) {
-    print('key ' + key.toString());
-  }
+  const Pastille({super.key, required this.lettre, required this.color});
 
   @override
   Widget build(BuildContext context) {
