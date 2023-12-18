@@ -160,7 +160,6 @@ class _PickerState extends State<Picker> {
                       ),
                     );
                     letters.remove(letters[rnd]);
-                    print(letters);
                   });
                 },
                 icon: const Icon(Icons.add))

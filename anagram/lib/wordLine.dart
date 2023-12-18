@@ -2,9 +2,17 @@ import 'package:anagram/pastille.dart';
 import 'package:flutter/material.dart';
 
 class WordLine extends StatefulWidget {
-  WordLine({super.key});
+  WordLine(
+      {super.key,
+      required this.id,
+      required this.callback,
+      required this.isSelected,
+      required this.isOneSelected});
 
-  bool isSelected = false;
+  int id;
+  Function(int) callback;
+  bool isSelected;
+  bool isOneSelected;
 
   @override
   State<WordLine> createState() => _WordLineState();
@@ -12,7 +20,6 @@ class WordLine extends StatefulWidget {
 
 class _WordLineState extends State<WordLine> {
   List<Pastille> accepted = [];
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -21,24 +28,37 @@ class _WordLineState extends State<WordLine> {
         children: [
           Container(
             width: 50,
-            child: const Column(
+            child: Column(
               children: [
-                IconButton.filled(
-                    onPressed: null, icon: Icon(Icons.check_circle)),
-                IconButton.filled(onPressed: null, icon: Icon(Icons.close)),
+                ElevatedButton(
+                    onPressed: () => widget.callback(0),
+                    child: const Icon(Icons.check_circle)),
+                ElevatedButton(
+                    onPressed: () {
+                      widget.callback(0);
+                    },
+                    child: const Icon(Icons.close)),
               ],
             ),
           ),
           DragTarget<Pastille>(
-            onWillAccept: (pastille) => accepted.length < 11,
-            onAccept: (pastille) => setState(() {
-              accepted.add(pastille);
-            }),
+            onWillAccept: (pastille) =>
+                accepted.length < 11 &&
+                (widget.isSelected || !widget.isOneSelected),
+            onAccept: (pastille) {
+              setState(() {
+                accepted.add(pastille);
+              });
+              widget.callback(widget.id);
+            },
             onLeave: null,
             builder: (context, candidates, rejected) => Container(
               height: 60,
               width: 700,
-              color: candidates.isEmpty ? Colors.grey : Colors.amber,
+              color: widget.isSelected ||
+                      (candidates.isNotEmpty && !widget.isOneSelected)
+                  ? Colors.amber
+                  : Colors.grey,
               child: ReorderableListView(
                 proxyDecorator: (child, index, animation) => child,
                 padding: EdgeInsets.zero,
@@ -51,9 +71,6 @@ class _WordLineState extends State<WordLine> {
                     }
                     final Pastille item = accepted.removeAt(oldIndex);
                     accepted.insert(newIndex, item);
-                    for (Pastille pastille in accepted) {
-                      print(pastille.lettre);
-                    }
                   });
                 },
                 children: accepted
