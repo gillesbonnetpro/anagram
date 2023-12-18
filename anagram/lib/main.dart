@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:anagram/wordLine.dart';
 import 'package:anagram/pastille.dart';
 import 'package:flutter/material.dart';
 
@@ -68,12 +69,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       }
                       final Pastille item = accepted.removeAt(oldIndex);
                       accepted.insert(newIndex, item);
+                      for (Pastille pastille in accepted) {
+                        print(pastille.lettre);
+                      }
                     });
                   },
                   children: accepted,
                 ),
               ),
             ),
+            const WordLine(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: pastList
