@@ -1,8 +1,6 @@
-import 'dart:math';
-
+import 'package:anagram/game_board.dart';
 import 'package:anagram/picker.dart';
 import 'package:anagram/wordLine.dart';
-import 'package:anagram/pastille.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -36,8 +34,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  /*List<Pastille> accepted = [];*/
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,21 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [WordLine(), WordLine(), WordLine(), WordLine(), Picker()],
-        ),
-      ),
-      /*
-      floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-      */
+      body: const GameBoard(),
     );
   }
 }

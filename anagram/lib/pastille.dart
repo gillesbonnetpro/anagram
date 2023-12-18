@@ -11,21 +11,23 @@ class Pastille extends StatelessWidget {
     TextStyle style = const TextStyle(
         color: Colors.white,
         fontWeight: FontWeight.w500,
-        fontSize: 30,
+        fontSize: 50,
         decoration: TextDecoration.none);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        width: 100.0,
-        height: 100.0,
+        width: 50,
+        height: 50,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: color,
         ),
         child: Center(
-          child: Text(
-            lettre,
-            style: style,
+          child: FittedBox(
+            child: Text(
+              lettre,
+              style: style,
+            ),
           ),
         ),
       ),
