@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:anagram/picker.dart';
 import 'package:anagram/wordLine.dart';
 import 'package:anagram/pastille.dart';
 import 'package:flutter/material.dart';
@@ -35,9 +36,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Pastille> pastList = [];
-  List<Pastille> accepted = [];
-  List<String> letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  /*List<Pastille> accepted = [];*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,54 +45,21 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const WordLine(),
-            const WordLine(),
-            const WordLine(),
-            const WordLine(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: pastList
-                  .map(
-                    (pastille) => Draggable<Pastille>(
-                      data: pastille,
-                      feedback: pastille,
-                      childWhenDragging: Opacity(
-                        opacity: 0.5,
-                        child: pastille,
-                      ),
-                      child: pastille,
-                      onDragCompleted: () {
-                        setState(() {
-                          pastList.removeWhere((past) => past == pastille);
-                        });
-                      },
-                    ),
-                  )
-                  .toList(),
-            ),
-          ],
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [WordLine(), WordLine(), WordLine(), WordLine(), Picker()],
         ),
       ),
+      /*
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          int rnd = Random().nextInt(letters.length);
-          setState(() {
-            pastList.add(
-              Pastille(
-                lettre: letters[rnd],
-                color: Colors.blue,
-                key: UniqueKey(),
-              ),
-            );
-          });
-        },
+        onPressed: null,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
+      */
     );
   }
 }
