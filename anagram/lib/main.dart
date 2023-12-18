@@ -49,35 +49,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            DragTarget<Pastille>(
-              onWillAccept: (pastille) => pastille != null,
-              onAccept: (pastille) => setState(() {
-                pastList.removeWhere((pastilleOld) => pastille == pastilleOld);
-                accepted.add(pastille);
-              }),
-              onLeave: null,
-              builder: (context, candidates, rejected) => Container(
-                height: 70,
-                width: 500,
-                color: candidates.isEmpty ? Colors.grey : Colors.amber,
-                child: ReorderableListView(
-                  scrollDirection: Axis.horizontal,
-                  onReorder: (int oldIndex, int newIndex) {
-                    setState(() {
-                      if (oldIndex < newIndex) {
-                        newIndex -= 1;
-                      }
-                      final Pastille item = accepted.removeAt(oldIndex);
-                      accepted.insert(newIndex, item);
-                      for (Pastille pastille in accepted) {
-                        print(pastille.lettre);
-                      }
-                    });
-                  },
-                  children: accepted,
-                ),
-              ),
-            ),
+            const WordLine(),
+            const WordLine(),
+            const WordLine(),
             const WordLine(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

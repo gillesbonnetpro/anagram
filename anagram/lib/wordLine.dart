@@ -17,7 +17,6 @@ class _WordLineState extends State<WordLine> {
     return DragTarget<Pastille>(
       onWillAccept: (pastille) => accepted.length < 6,
       onAccept: (pastille) => setState(() {
-        /* pastList.removeWhere((pastilleOld) => pastille == pastilleOld);*/
         accepted.add(pastille);
       }),
       onLeave: null,
@@ -26,7 +25,7 @@ class _WordLineState extends State<WordLine> {
         width: 700,
         color: candidates.isEmpty ? Colors.grey : Colors.amber,
         child: ReorderableListView(
-          buildDefaultDragHandles: true,
+          buildDefaultDragHandles: false,
           scrollDirection: Axis.horizontal,
           onReorder: (int oldIndex, int newIndex) {
             setState(() {
@@ -40,7 +39,12 @@ class _WordLineState extends State<WordLine> {
               }
             });
           },
-          children: accepted,
+          children: accepted
+              .map((pastille) => ReorderableDragStartListener(
+                  key: pastille.key,
+                  index: accepted.indexOf(pastille),
+                  child: pastille))
+              .toList(),
         ),
       ),
     );
