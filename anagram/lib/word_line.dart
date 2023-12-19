@@ -21,6 +21,7 @@ class WordLine extends StatefulWidget {
 
 class _WordLineState extends State<WordLine> {
   List<Pastille> accepted = [];
+  List<Pastille> preserved = [];
 
   @override
   Widget build(BuildContext context) {
@@ -29,19 +30,25 @@ class _WordLineState extends State<WordLine> {
       setState(() {
         widget.isSelected = selectedLine.value == widget.id;
         widget.isOneSelected = selectedLine.value != 0;
+        if (widget.isSelected) {
+          preserved.clear();
+          preserved = [...accepted];
+          print('ligne ${widget.id} sauvegarde $preserved ');
+        }
       });
       print('line ${widget.id} - selection ligne : ${selectedLine.value}');
     });
 
     // à l'écoute de si une ligne libère la sélection
     playerChoice.addListener(() {
+      print(
+          'line ${widget.id} - action : ${playerChoice.value} - selected : ${widget.isSelected}');
       setState(() {
         widget.isSelected = false;
         widget.isOneSelected = false;
       });
       selectedLine.value = 0;
-
-      print('line ${widget.id} - action : ${playerChoice.value}');
+      playerChoice.value = GameAction.wait;
     });
 
     return Padding(
@@ -53,14 +60,28 @@ class _WordLineState extends State<WordLine> {
             child: Column(
               children: [
                 ElevatedButton(
-                    onPressed: () => widget.isSelected
-                        ? playerChoice.value = GameAction.valid
-                        : null,
+                    onPressed: () {
+                      if (widget.isSelected) {
+                        playerChoice.value = GameAction.valid;
+                        print('ligne ${widget.id} validée ');
+                      } else {
+                        print('Valide sur ligne non selectionnée');
+                      }
+                    },
                     child: const Icon(Icons.check_circle)),
                 ElevatedButton(
-                    onPressed: () => widget.isSelected
-                        ? playerChoice.value = GameAction.cancel
-                        : null,
+                    onPressed: () {
+                      if (widget.isSelected) {
+                        setState(() {
+                          accepted.clear();
+                          accepted = [...preserved];
+                        });
+                        playerChoice.value = GameAction.cancel;
+                        print('ligne ${widget.id} restauration $preserved ');
+                      } else {
+                        print('Cancel sur ligne non selectionnée');
+                      }
+                    },
                     child: const Icon(Icons.close)),
               ],
             ),
@@ -70,11 +91,14 @@ class _WordLineState extends State<WordLine> {
                 accepted.length < 11 &&
                 (widget.isSelected || !widget.isOneSelected),
             onAccept: (pastille) {
+              if (!widget.isSelected) {
+                selectedLine.value = widget.id;
+              }
               setState(() {
                 accepted.add(pastille);
               });
-              // widget.callback(widget.id);
-              selectedLine.value = widget.id;
+              print(
+                  'ligne actuelle : ${widget.id} - selected ? ${widget.isSelected}');
             },
             onLeave: null,
             builder: (context, candidates, rejected) => Container(
