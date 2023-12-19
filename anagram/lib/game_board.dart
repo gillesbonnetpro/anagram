@@ -1,5 +1,5 @@
 import 'package:anagram/picker.dart';
-import 'package:anagram/wordLine.dart';
+import 'package:anagram/word_line.dart';
 import 'package:flutter/material.dart';
 
 class GameBoard extends StatefulWidget {
@@ -10,36 +10,15 @@ class GameBoard extends StatefulWidget {
 
 class _GameBoardState extends State<GameBoard> {
   List<WordLine> lineList = [];
-  int selected = 0;
 
   @override
   Widget build(BuildContext context) {
     lineList = [
-      WordLine(
-          id: 1,
-          callback: setSelected,
-          isSelected: selected == 1,
-          isOneSelected: selected != 0),
-      WordLine(
-          id: 2,
-          callback: setSelected,
-          isSelected: selected == 2,
-          isOneSelected: selected != 0),
-      WordLine(
-          id: 3,
-          callback: setSelected,
-          isSelected: selected == 3,
-          isOneSelected: selected != 0),
-      WordLine(
-          id: 4,
-          callback: setSelected,
-          isSelected: selected == 4,
-          isOneSelected: selected != 0),
-      WordLine(
-          id: 5,
-          callback: setSelected,
-          isSelected: selected == 5,
-          isOneSelected: selected != 0),
+      WordLine(id: 1),
+      WordLine(id: 2),
+      WordLine(id: 3),
+      WordLine(id: 4),
+      WordLine(id: 5),
     ];
 
     return Center(
@@ -49,13 +28,5 @@ class _GameBoardState extends State<GameBoard> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [...lineList, const Picker()]),
     );
-  }
-
-  void setSelected(int id) {
-    print('callback $id');
-
-    setState(() {
-      selected = id;
-    });
   }
 }

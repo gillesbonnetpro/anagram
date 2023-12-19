@@ -1,18 +1,19 @@
 import 'package:anagram/pastille.dart';
 import 'package:flutter/material.dart';
+import 'package:anagram/notifier.dart';
 
 class WordLine extends StatefulWidget {
-  WordLine(
-      {super.key,
-      required this.id,
-      required this.callback,
-      required this.isSelected,
-      required this.isOneSelected});
+  WordLine({
+    super.key,
+    required this.id,
+  }) {
+    isOneSelected = false;
+    isSelected = false;
+  }
 
   int id;
-  Function(int) callback;
-  bool isSelected;
-  bool isOneSelected;
+  late bool isSelected;
+  late bool isOneSelected;
 
   @override
   State<WordLine> createState() => _WordLineState();
@@ -20,8 +21,28 @@ class WordLine extends StatefulWidget {
 
 class _WordLineState extends State<WordLine> {
   List<Pastille> accepted = [];
+
   @override
   Widget build(BuildContext context) {
+// à l'écoute de si une ligne est sélectionnée
+    selectedLine.addListener(() {
+      setState(() {
+        widget.isSelected = selectedLine.value == widget.id;
+        widget.isOneSelected = selectedLine.value != 0;
+      });
+      print('line ${widget.id} - selection ligne : ${selectedLine.value}');
+    });
+
+    // à l'écoute de si une ligne libère la sélection
+    playerChoice.addListener(() {
+      setState(() {
+        widget.isSelected = false;
+        widget.isOneSelected = false;
+      });
+
+      print('line ${widget.id} - action : ${playerChoice.value}');
+    });
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -31,12 +52,14 @@ class _WordLineState extends State<WordLine> {
             child: Column(
               children: [
                 ElevatedButton(
-                    onPressed: () => widget.callback(0),
+                    onPressed: () => widget.isSelected
+                        ? playerChoice.value = GameAction.valid
+                        : null,
                     child: const Icon(Icons.check_circle)),
                 ElevatedButton(
-                    onPressed: () {
-                      widget.callback(0);
-                    },
+                    onPressed: () => widget.isSelected
+                        ? playerChoice.value = GameAction.cancel
+                        : null,
                     child: const Icon(Icons.close)),
               ],
             ),
@@ -49,7 +72,8 @@ class _WordLineState extends State<WordLine> {
               setState(() {
                 accepted.add(pastille);
               });
-              widget.callback(widget.id);
+              // widget.callback(widget.id);
+              selectedLine.value = widget.id;
             },
             onLeave: null,
             builder: (context, candidates, rejected) => Container(
