@@ -39,6 +39,7 @@ class _WordLineState extends State<WordLine> {
         widget.isSelected = false;
         widget.isOneSelected = false;
       });
+      selectedLine.value = 0;
 
       print('line ${widget.id} - action : ${playerChoice.value}');
     });
