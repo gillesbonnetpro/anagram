@@ -48,7 +48,6 @@ class _WordLineState extends State<WordLine> {
         widget.isOneSelected = false;
       });
       selectedLine.value = 0;
-      playerChoice.value = GameAction.wait;
     });
 
     return Padding(

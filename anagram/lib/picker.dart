@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:anagram/notifier.dart';
 import 'package:anagram/pastille.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,7 @@ class Picker extends StatefulWidget {
 
 class _PickerState extends State<Picker> {
   final List<Pastille> pastList = [];
+  final List<Pastille> preserved = [];
   List<String> letters = [
     'a',
     'a',
@@ -117,6 +119,29 @@ class _PickerState extends State<Picker> {
 
   @override
   Widget build(BuildContext context) {
+    // à l'écoute de si une ligne est sélectionnée
+    selectedLine.addListener(() {
+      if (selectedLine.value != 0) {
+        setState(() {
+          preserved.clear();
+          preserved.addAll(pastList);
+        });
+      }
+    });
+
+    // à l'écoute de si une ligne libère la sélection
+    playerChoice.addListener(() {
+      if (playerChoice.value == GameAction.cancel) {
+        List<Pastille> transfert =
+            preserved.where((past) => !pastList.contains(past)).toList();
+        print('Picker : $transfert');
+        setState(() {
+          pastList.addAll(transfert);
+        });
+      }
+      playerChoice.value = GameAction.wait;
+    });
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
