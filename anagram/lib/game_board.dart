@@ -3,7 +3,7 @@ import 'package:anagram/wordLine.dart';
 import 'package:flutter/material.dart';
 
 class GameBoard extends StatefulWidget {
-  GameBoard({super.key});
+  const GameBoard({super.key});
   @override
   State<GameBoard> createState() => _GameBoardState();
 }
@@ -47,12 +47,12 @@ class _GameBoardState extends State<GameBoard> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [...lineList]..add(const Picker())),
+          children: [...lineList, const Picker()]),
     );
   }
 
   void setSelected(int id) {
-    print('callback ${id}');
+    print('callback $id');
 
     setState(() {
       selected = id;

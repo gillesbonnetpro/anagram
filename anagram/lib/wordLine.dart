@@ -26,7 +26,7 @@ class _WordLineState extends State<WordLine> {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
-          Container(
+          SizedBox(
             width: 50,
             child: Column(
               children: [
