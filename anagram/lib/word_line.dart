@@ -1,3 +1,4 @@
+import 'package:anagram/capello.dart';
 import 'package:anagram/pastille.dart';
 import 'package:flutter/material.dart';
 import 'package:anagram/notifier.dart';
