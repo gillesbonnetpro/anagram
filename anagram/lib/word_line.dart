@@ -77,8 +77,8 @@ class _WordLineState extends State<WordLine> {
                           accepted = [...preserved];
                         });
                         playerChoice.value = GameAction.cancel;
-                        print('ligne ${widget.id} restauration $preserved ');
                       } else {
+                        // todo informer user
                         print('Cancel sur ligne non selectionnée');
                       }
                     },
