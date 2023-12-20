@@ -54,4 +54,22 @@ class Capello {
       return 'dico prêt';
     }); // (3)
   }
+
+  bool checkWord(String candidate) {
+    print('recherche de mots : lng ${candidate.length}');
+    print('recherche parmi ${dico[candidate.length]!.length}');
+    bool isOk;
+    List<String> around;
+
+    isOk = dico[candidate.length] == null
+        ? false
+        : dico[candidate.length]!.contains(candidate);
+
+    if (!isOk) {
+      around = [...dico[candidate.length]!];
+      around.removeWhere((element) => element[0] != candidate[0]);
+      print('initiales : $around');
+    }
+    return isOk;
+  }
 }

@@ -24,6 +24,14 @@ class _WordLineState extends State<WordLine> {
   List<Pastille> accepted = [];
   List<Pastille> preserved = [];
 
+  String getWord() {
+    String word = '';
+    for (var pastille in accepted) {
+      word += pastille.lettre;
+    }
+    return word;
+  }
+
   @override
   Widget build(BuildContext context) {
 // à l'écoute de si une ligne est sélectionnée
@@ -62,7 +70,9 @@ class _WordLineState extends State<WordLine> {
                 ElevatedButton(
                     onPressed: () {
                       if (widget.isSelected) {
-                        playerChoice.value = GameAction.valid;
+                        Capello().checkWord(getWord().toUpperCase())
+                            ? playerChoice.value = GameAction.valid
+                            : print('mot inconnu ${getWord()}');
                         print('ligne ${widget.id} validée ');
                       } else {
                         print('Valide sur ligne non selectionnée');
