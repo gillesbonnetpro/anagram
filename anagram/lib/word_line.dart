@@ -42,16 +42,12 @@ class _WordLineState extends State<WordLine> {
         if (widget.isSelected) {
           preserved.clear();
           preserved = [...accepted];
-          print('ligne ${widget.id} sauvegarde $preserved ');
         }
       });
-      print('line ${widget.id} - selection ligne : ${selectedLine.value}');
     });
 
     // à l'écoute de si une ligne libère la sélection
     playerChoice.addListener(() {
-      print(
-          'line ${widget.id} - action : ${playerChoice.value} - selected : ${widget.isSelected}');
       setState(() {
         widget.isSelected = false;
         widget.isOneSelected = false;

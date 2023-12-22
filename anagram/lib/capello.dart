@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 class Capello {
@@ -69,7 +70,24 @@ class Capello {
       around = [...dico[candidate.length]!];
       around.removeWhere((element) => element[0] != candidate[0]);
       print('initiales : $around');
+    } else {
+      search(candidate);
     }
     return isOk;
+  }
+
+  void search(String validated) {
+    print('recherche de complément pour $validated');
+    List<String> letters = [];
+    for (String letter in validated.characters) {
+      letters.add(letter);
+    }
+
+    letters.forEach((element) {
+      print(element);
+    });
+
+    letters.sort((a, b) => a.compareTo(b));
+    print('trié : $validated');
   }
 }
