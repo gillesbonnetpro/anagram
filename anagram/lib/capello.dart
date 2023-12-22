@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:anagram/notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -12,24 +13,25 @@ class Capello {
 
   Capello._internal();
 
-  Future<String> starter() {
-    return Future.value('OK !!');
-  }
-
-  Future<String?> loadAsset() async {
+  /*  Future<String?> loadAsset() async {
     print('début de lecture dans cappelo');
     await rootBundle.loadString('assets/res/ODS231219.txt').then((value) {
       return 'dico lu';
     }).catchError((error) {
       return '$error';
     });
-  }
+  } */
 
   Map<int, List<String>> dico = {};
+  List<String> _pickerStock = [];
 
-  Future<String?> readFileAsync() {
-    print('début de lecture fichier');
-    File file = File('./assets/res/ODS231219.txt'); // (1)
+  Future<String?> initiate() {
+    pickerStock.addListener(() {
+      _pickerStock = pickerStock.value;
+      print('stock : $_pickerStock');
+    });
+
+    File file = File('./assets/res/ODS231219.txt');
     Future<String> futureContent = file.readAsString();
     return futureContent.then((c) {
       print('fichier lu. début répartition');
@@ -42,18 +44,8 @@ class Capello {
           dico[element.length]!.add(element);
         }
       }
-      print('fin répartition');
-
-      dico.keys.forEach((lng) {
-        print('$lng ${dico[lng]!.length}');
-      });
-
-      dico[3]!.forEach((element) {
-        print(element);
-      });
-
       return 'dico prêt';
-    }); // (3)
+    });
   }
 
   bool checkWord(String candidate) {
@@ -78,16 +70,29 @@ class Capello {
 
   void search(String validated) {
     print('recherche de complément pour $validated');
-    List<String> letters = [];
+    List<String> lettersCandidate = [];
     for (String letter in validated.characters) {
-      letters.add(letter);
+      lettersCandidate.add(letter);
     }
 
-    letters.forEach((element) {
-      print(element);
-    });
+    for (var mot in dico[(validated.length + 1)]!) {
+      List<String> diff = [];
+      List<String> motTest = mot.split('');
 
-    letters.sort((a, b) => a.compareTo(b));
-    print('trié : $validated');
+      for (var lettre in lettersCandidate) {
+        if (motTest.contains(lettre)) {
+          motTest.removeAt(motTest.indexOf(lettre));
+        } else {
+          diff.add(lettre);
+        }
+      }
+      motTest.addAll(diff);
+      if (motTest.length == 1) {
+        print('$validated et $mot sont séparés de ${motTest}');
+        if (_pickerStock.contains(motTest.first)) {
+          print(' ${motTest.first} est disponible en pioche');
+        }
+      }
+    }
   }
 }

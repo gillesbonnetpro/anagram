@@ -138,6 +138,8 @@ class _PickerState extends State<Picker> {
         setState(() {
           pastList.addAll(transfert);
         });
+      } else {
+        pickerStock.value = pastList.map((e) => e.lettre).toList();
       }
       playerChoice.value = GameAction.wait;
     });
@@ -185,6 +187,7 @@ class _PickerState extends State<Picker> {
                       ),
                     );
                     letters.remove(letters[rnd]);
+                    pickerStock.value = pastList.map((e) => e.lettre).toList();
                   });
                 },
                 icon: const Icon(Icons.add))

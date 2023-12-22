@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+ValueNotifier<List<String>> pickerStock = ValueNotifier<List<String>>([]);
+
 ValueNotifier<int> selectedLine = ValueNotifier<int>(0);
 
 ValueNotifier<GameAction> playerChoice =

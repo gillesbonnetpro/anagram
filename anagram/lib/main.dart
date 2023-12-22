@@ -46,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     ;
     return FutureBuilder<String?>(
-        future: s1.readFileAsync(),
+        future: s1.initiate(),
         builder: (context, snapshot) {
           return snapshot.hasData
               ? Scaffold(
