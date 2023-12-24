@@ -131,8 +131,8 @@ class _PickerState extends State<Picker> {
           ),
         );
         letters.remove(letters[rnd]);
-        pickerStock.value = pastList.map((e) => e.lettre).toList();
       });
+      pickerStock.value = pastList.map((e) => e.lettre).toList();
     }
 
     pickerStock.value = pastList.map((e) => e.lettre).toList();
