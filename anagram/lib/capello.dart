@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:anagram/notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 
 class Capello {
   static final Capello _singleton = Capello._internal();
@@ -44,7 +43,7 @@ class Capello {
           dico[element.length]!.add(element);
         }
       }
-      return 'dico prêt';
+      return 'Anna Gram';
     });
   }
 
@@ -88,10 +87,8 @@ class Capello {
       }
       motTest.addAll(diff);
       if (motTest.length == 1) {
-        print('$validated et $mot sont séparés de ${motTest}');
-        if (_pickerStock.contains(motTest.first)) {
-          print(' ${motTest.first} est disponible en pioche');
-        }
+        print(
+            '$validated et $mot sont séparés de ${motTest} - pioche : ${_pickerStock.contains(motTest.first.toLowerCase())}');
       }
     }
   }
