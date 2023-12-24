@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:anagram/notifier.dart';
@@ -30,21 +31,50 @@ class Capello {
       print('stock : $_pickerStock');
     });
 
-    File file = File('./assets/res/ODS231219.txt');
-    Future<String> futureContent = file.readAsString();
+    File file = File('./assets/res/myODS.txt');
+    /* Future<String> futureContent = file.readAsString();
     return futureContent.then((c) {
       print('fichier lu. début répartition');
-      List<String> ccut = c.split(' ');
-      for (var element in ccut) {
-        if (element.length > 2 && element.length < 16) {
-          if (!dico.keys.contains(element.length)) {
-            dico[element.length] = [];
+      List<String> ccut = c.split('\n');
+      print('nb mots ${ccut.length}');
+ */
+ 
+
+
+  file
+    .openRead()
+    .transform(utf8.decoder)
+    .transform(const LineSplitter())
+    .forEach(
+      (l) {
+        print('line: $l');
+     
+        //print(element);
+        if (l.length > 2 && l.length < 16) {
+          if (!dico.keys.contains(l.length)) {
+            dico[l.length] = [];
           }
-          dico[element.length]!.add(element);
+          dico[l.length]!.add(l);
         }
-      }
-      return 'Anna Gram';
-    });
+      });
+
+
+
+      
+
+      dico.keys.forEach((letterNb) {
+        print('$letterNb => ${dico[letterNb]?.length ?? 0}');
+      });
+
+      print('${dico[3]}');
+
+
+
+
+
+
+      return Future.value('Anna Gram');
+    }
   }
 
   bool checkWord(String candidate) {

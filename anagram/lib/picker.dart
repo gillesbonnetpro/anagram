@@ -117,8 +117,33 @@ class _PickerState extends State<Picker> {
     'z'
   ];
 
+// complète la pioche si besoin
+  void autoPick() {
+    print('appel autopick');
+    while (pastList.length < 10) {
+      int rnd = Random().nextInt(letters.length);
+      setState(() {
+        pastList.add(
+          Pastille(
+            lettre: letters[rnd],
+            color: Colors.blue,
+            key: UniqueKey(),
+          ),
+        );
+        letters.remove(letters[rnd]);
+        pickerStock.value = pastList.map((e) => e.lettre).toList();
+      });
+    }
+
+    pickerStock.value = pastList.map((e) => e.lettre).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (pastList.isEmpty) {
+      autoPick();
+    }
+
     // à l'écoute de si une ligne est sélectionnée
     selectedLine.addListener(() {
       if (selectedLine.value != 0) {
@@ -139,7 +164,7 @@ class _PickerState extends State<Picker> {
           pastList.addAll(transfert);
         });
       } else {
-        pickerStock.value = pastList.map((e) => e.lettre).toList();
+        autoPick();
       }
       playerChoice.value = GameAction.wait;
     });
@@ -175,7 +200,7 @@ class _PickerState extends State<Picker> {
                   )
                   .toList(),
             ),
-            IconButton(
+            /*   IconButton(
                 onPressed: () {
                   int rnd = Random().nextInt(letters.length);
                   setState(() {
@@ -190,7 +215,7 @@ class _PickerState extends State<Picker> {
                     pickerStock.value = pastList.map((e) => e.lettre).toList();
                   });
                 },
-                icon: const Icon(Icons.add))
+                icon: const Icon(Icons.add)) */
           ],
         ),
       ),
