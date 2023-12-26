@@ -132,11 +132,16 @@ class _WordLineState extends State<WordLine> {
                 },
                 children: accepted
                     .map(
-                      (pastille) => ReorderableDragStartListener(
-                        key: pastille.key,
-                        index: accepted.indexOf(pastille),
-                        child: Container(child: pastille),
-                      ),
+                      (pastille) => widget.isSelected
+                          ? ReorderableDragStartListener(
+                              key: pastille.key,
+                              index: accepted.indexOf(pastille),
+                              child: Container(child: pastille),
+                            )
+                          : IgnorePointer(
+                              key: pastille.key,
+                              child: Container(child: pastille),
+                            ),
                     )
                     .toList(),
               ),
