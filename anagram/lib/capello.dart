@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:anagram/notifier.dart';
@@ -12,53 +13,52 @@ class Capello {
 
   Capello._internal();
 
-  /*  Future<String?> loadAsset() async {
-    print('début de lecture dans cappelo');
-    await rootBundle.loadString('assets/res/ODS231219.txt').then((value) {
-      return 'dico lu';
-    }).catchError((error) {
-      return '$error';
-    });
-  } */
-
   Map<int, List<String>> dico = {};
   List<String> _pickerStock = [];
 
   Future<String?> initiate() {
     pickerStock.addListener(() {
       _pickerStock = pickerStock.value;
-      print('stock : $_pickerStock');
+      //    print('stock : $_pickerStock');
     });
 
-    File file = File('./assets/res/ODS231219.txt');
-    Future<String> futureContent = file.readAsString();
-    return futureContent.then((c) {
+    File file = File('./assets/res/myODS.txt');
+    Future<List<String>> futureContent = file.readAsLines();
+    return futureContent.then((list) {
       print('fichier lu. début répartition');
-      List<String> ccut = c.split(' ');
-      for (var element in ccut) {
-        if (element.length > 2 && element.length < 16) {
-          if (!dico.keys.contains(element.length)) {
-            dico[element.length] = [];
+      // List<String> ccut = c.split('\n');
+      print('nb mots ${list.length}');
+
+      for (String word in list) {
+        if (word.length > 2 && word.length < 15) {
+          if (dico[word.length] == null) {
+            dico[word.length] = [];
           }
-          dico[element.length]!.add(element);
+          dico[word.length]!.add(word.toLowerCase());
         }
       }
+      /*   dico.keys.forEach((letterNb) {
+        print('$letterNb => ${dico[letterNb]?.length ?? 0}');
+      });
+
+      print('${dico[3]}');
+      print('${dico[3]!.last}'); */
       return 'Anna Gram';
     });
   }
 
   bool checkWord(String candidate) {
-    print('recherche de mots : lng ${candidate.length}');
-    print('recherche parmi ${dico[candidate.length]!.length}');
+    int nbLetters = candidate.length;
     bool isOk;
     List<String> around;
 
-    isOk = dico[candidate.length] == null
-        ? false
-        : dico[candidate.length]!.contains(candidate);
+    candidate = candidate.toLowerCase();
+
+    isOk =
+        dico[nbLetters] == null ? false : dico[nbLetters]!.contains(candidate);
 
     if (!isOk) {
-      around = [...dico[candidate.length]!];
+      around = [...dico[nbLetters]!];
       around.removeWhere((element) => element[0] != candidate[0]);
       print('initiales : $around');
     } else {
@@ -86,7 +86,8 @@ class Capello {
         }
       }
       motTest.addAll(diff);
-      if (motTest.length == 1) {
+      if (motTest.length == 1 &&
+          _pickerStock.contains(motTest.first.toLowerCase())) {
         print(
             '$validated et $mot sont séparés de ${motTest} - pioche : ${_pickerStock.contains(motTest.first.toLowerCase())}');
       }
