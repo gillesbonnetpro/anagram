@@ -19,7 +19,7 @@ class Capello {
   Future<String?> initiate() {
     pickerStock.addListener(() {
       _pickerStock = pickerStock.value;
-      print('stock : $_pickerStock');
+      //    print('stock : $_pickerStock');
     });
 
     File file = File('./assets/res/myODS.txt');
