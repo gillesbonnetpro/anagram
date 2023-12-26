@@ -64,31 +64,33 @@ class _WordLineState extends State<WordLine> {
             child: Column(
               children: [
                 ElevatedButton(
-                    onPressed: () {
-                      if (widget.isSelected) {
-                        Capello().checkWord(getWord().toUpperCase())
-                            ? playerChoice.value = GameAction.valid
-                            : print('mot inconnu ${getWord()}');
-                        print('ligne ${widget.id} validée ');
-                      } else {
-                        print('Valide sur ligne non selectionnée');
-                      }
-                    },
-                    child: const Icon(Icons.check_circle)),
+                  onPressed: () {
+                    if (widget.isSelected) {
+                      Capello().checkWord(getWord().toUpperCase())
+                          ? playerChoice.value = GameAction.valid
+                          : print('mot inconnu ${getWord()}');
+                      print('ligne ${widget.id} validée ');
+                    } else {
+                      print('Valide sur ligne non selectionnée');
+                    }
+                  },
+                  child: const Icon(Icons.check_circle),
+                ),
                 ElevatedButton(
-                    onPressed: () {
-                      if (widget.isSelected) {
-                        setState(() {
-                          accepted.clear();
-                          accepted = [...preserved];
-                        });
-                        playerChoice.value = GameAction.cancel;
-                      } else {
-                        // todo informer user
-                        print('Cancel sur ligne non selectionnée');
-                      }
-                    },
-                    child: const Icon(Icons.close)),
+                  onPressed: () {
+                    if (widget.isSelected) {
+                      setState(() {
+                        accepted.clear();
+                        accepted = [...preserved];
+                      });
+                      playerChoice.value = GameAction.cancel;
+                    } else {
+                      // todo informer user
+                      print('Cancel sur ligne non selectionnée');
+                    }
+                  },
+                  child: const Icon(Icons.close),
+                ),
               ],
             ),
           ),
@@ -140,6 +142,11 @@ class _WordLineState extends State<WordLine> {
               ),
             ),
           ),
+          if (accepted.isNotEmpty) ...[
+            IconButton(
+                onPressed: () => Capello().searchOpti(getWord()),
+                icon: const Icon(Icons.lightbulb))
+          ]
         ],
       ),
     );
