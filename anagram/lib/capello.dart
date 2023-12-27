@@ -21,22 +21,27 @@ class Capello {
       print('stock : $_pickerStock');
     });
 
-    File file = File('./assets/res/ODS231219.txt');
-    Future<String> futureContent = file.readAsString();
-    return futureContent.then((c) {
+    File file = File('./assets/res/myODS.txt');
+    Future<List<String>> futureContent = file.readAsLines();
+    return futureContent.then((list) {
       print('fichier lu. début répartition');
-      List<String> ccut = c.split(' ');
-      for (var element in ccut) {
-        if (element.length > 2 && element.length < 16) {
-          if (!dico.keys.contains(element.length)) {
-            dico[element.length] = [];
+      // List<String> ccut = c.split('\n');
+      print('nb mots ${list.length}');
+
+      for (String word in list) {
+        if (word.length > 2 && word.length < 15) {
+          if (dico[word.length] == null) {
+            dico[word.length] = [];
           }
-          /* if (!dico[element.length]!.contains(element)) {
-            dico[element.length]!.add(element);
-          } */
-          dico[element.length]!.add(element);
+          dico[word.length]!.add(word.toLowerCase());
         }
       }
+      /*   dico.keys.forEach((letterNb) {
+        print('$letterNb => ${dico[letterNb]?.length ?? 0}');
+      });
+
+      print('${dico[3]}');
+      print('${dico[3]!.last}'); */
       return 'Anna Gram';
     });
   }
