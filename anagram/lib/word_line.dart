@@ -157,7 +157,7 @@ class _WordLineState extends State<WordLine> {
                     }),
                     icon: const Icon(Icons.lightbulb),
                   )
-                : Text(suggested!, style: )
+                : Pastille(lettre: suggested!, color: Colors.amber)
           ]
         ],
       ),
