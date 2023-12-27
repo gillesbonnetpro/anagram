@@ -22,6 +22,7 @@ class Capello {
     });
 
     File file = File('./assets/res/myODS.txt');
+    print('début lecture du fichier');
     Future<List<String>> futureContent = file.readAsLines();
     return futureContent.then((list) {
       print('fichier lu. début répartition');
@@ -40,18 +41,22 @@ class Capello {
         print('$letterNb => ${dico[letterNb]?.length ?? 0}');
       });
 
-      print('${dico[3]}');
+     
       print('${dico[3]!.last}'); */
+
+      print('${dico[3]}');
       return 'Anna Gram';
     });
   }
 
 // vérifie si le mot existe
   bool checkWord(String candidate) {
-    print('recherche de mots : lng ${candidate.length}');
+    print('recherche de mots : lng ${candidate.length} pour $candidate');
     print('recherche parmi ${dico[candidate.length]!.length}');
     bool isOk;
     List<String> around;
+
+    candidate = candidate.toLowerCase();
 
     isOk = dico[candidate.length] == null
         ? false
@@ -61,13 +66,11 @@ class Capello {
       around = [...dico[candidate.length]!];
       around.removeWhere((element) => element[0] != candidate[0]);
       print('initiales : $around');
-    } else {
-      search(candidate);
     }
     return isOk;
   }
 
-  // cherche si un mot avec une lettre de + est possible
+  /* 
   String search(String validated) {
     print('recherche de complément pour $validated');
     List<String> lettersCandidate = [];
@@ -93,7 +96,9 @@ class Capello {
 
     return diff.length == 1 ? diff.first : '';
   }
+ */
 
+  // cherche si un mot avec une lettre de + est possible
   String searchOpti(String basis) {
     List<String> basisLetters = [];
     List<String> solutionLetters = [];
@@ -138,14 +143,18 @@ class Capello {
       print('lettre $key : ${value.length} mots');
     });
 
-    solutionLetters = solution.keys.toList();
+    if (solution.isEmpty) {
+      return 'XXX';
+    } else {
+      solutionLetters = solution.keys.toList();
 
-    solutionLetters.sort((a, b) => solution[b]!.length - solution[a]!.length);
+      solutionLetters.sort((a, b) => solution[b]!.length - solution[a]!.length);
 
-    print(solutionLetters.isEmpty
-        ? 'pas de solution'
-        : 'je retourne la lettre ${solutionLetters.first}');
+      print(solutionLetters.isEmpty
+          ? 'pas de solution'
+          : 'je retourne la lettre ${solutionLetters.first}');
 
-    return solutionLetters.first;
+      return solutionLetters.first;
+    }
   }
 }

@@ -150,12 +150,14 @@ class _WordLineState extends State<WordLine> {
             ),
           ),
           if (accepted.isNotEmpty) ...[
-            null == suggested
+            null == suggested || suggested!.length > 1
                 ? IconButton(
                     onPressed: () => setState(() {
                       suggested = Capello().searchOpti(getWord());
                     }),
-                    icon: const Icon(Icons.lightbulb),
+                    icon: null == suggested
+                        ? const Icon(Icons.lightbulb)
+                        : const Icon(Icons.close),
                   )
                 : Pastille(lettre: suggested!, color: Colors.amber)
           ]
