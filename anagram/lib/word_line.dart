@@ -23,6 +23,7 @@ class WordLine extends StatefulWidget {
 class _WordLineState extends State<WordLine> {
   List<Pastille> accepted = [];
   List<Pastille> preserved = [];
+  String? suggested;
 
   String getWord() {
     String word = '';
@@ -51,6 +52,7 @@ class _WordLineState extends State<WordLine> {
       setState(() {
         widget.isSelected = false;
         widget.isOneSelected = false;
+        suggested = null;
       });
       selectedLine.value = 0;
     });
@@ -148,9 +150,14 @@ class _WordLineState extends State<WordLine> {
             ),
           ),
           if (accepted.isNotEmpty) ...[
-            IconButton(
-                onPressed: () => Capello().searchOpti(getWord()),
-                icon: const Icon(Icons.lightbulb))
+            null == suggested
+                ? IconButton(
+                    onPressed: () => setState(() {
+                      suggested = Capello().searchOpti(getWord());
+                    }),
+                    icon: const Icon(Icons.lightbulb),
+                  )
+                : Text(suggested!, style: )
           ]
         ],
       ),

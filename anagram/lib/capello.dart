@@ -141,6 +141,6 @@ class Capello {
         ? 'pas de solution'
         : 'je retourne la lettre ${solutionLetters.first}');
 
-    return 'x' /*solutionLetters.first*/;
+    return solutionLetters.first;
   }
 }
