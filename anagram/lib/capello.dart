@@ -25,7 +25,7 @@ class Capello {
     File file = File('./assets/res/myODS.txt');
 
     print('début lecture du fichier');
- 
+
     Future<List<String>> futureContent = file.readAsLines();
     return futureContent.then((list) {
       print('fichier lu. début répartition');
@@ -40,7 +40,7 @@ class Capello {
           dico[word.length]!.add(word.toLowerCase());
         }
       }
-     
+
       return 'Anna Gram';
     });
   }
@@ -52,13 +52,11 @@ class Capello {
     print('recherche parmi ${dico[nbLetters]!.length}');
     bool isOk;
     List<String> around;
-    
 
     candidate = candidate.toLowerCase();
 
-    isOk = dico[nbLetters] == null
-        ? false
-        : dico[nbLetters]!.contains(candidate);
+    isOk =
+        dico[nbLetters] == null ? false : dico[nbLetters]!.contains(candidate);
 
     if (!isOk) {
       around = [...dico[nbLetters]!];
@@ -68,14 +66,13 @@ class Capello {
     return isOk;
   }
 
-
   // cherche si un mot avec une lettre de + est possible
   String searchOpti(String basis) {
     List<String> basisLetters = [];
     List<String> solutionLetters = [];
     Map<String, List<String>> solution = {};
 
-    //éclatement mot de base en tableau de lettres
+    // éclatement mot de base en tableau de lettres
     for (String letter in basis.characters) {
       basisLetters.add(letter);
     }
@@ -87,6 +84,7 @@ class Capello {
       List<String> diff = [];
       List<String> motTest = mot.split('');
 
+      // passage en revue de toutes les lettres du mots validés par le joueur
       for (var lettre in basisLetters) {
         if (motTest.contains(lettre)) {
           motTest.removeAt(motTest.indexOf(lettre));
@@ -94,24 +92,25 @@ class Capello {
           diff.add(lettre);
         }
 
-      motTest.addAll(diff);
-      if (motTest.length == 1 &&
-          _pickerStock.contains(motTest.first.toLowerCase())) {
-        print(
-            '$validated et $mot sont séparés de ${motTest} - pioche : ${_pickerStock.contains(motTest.first.toLowerCase())}');
+        /* motTest.addAll(diff);
+        if (motTest.length == 1 &&
+            _pickerStock.contains(motTest.first.toLowerCase())) {
+          print(
+              '$basis et $mot sont séparés de ${motTest} - pioche : ${_pickerStock.contains(motTest.first.toLowerCase())}');
+        } */
 
-      }
-      // cumul des différences de lettres entre les 2 mots;
-      diff.addAll(motTest);
-      //print('diff $mot / $basis : $diff');
+        // cumul des différences de lettres entre les 2 mots;
+        diff.addAll(motTest);
+        //print('diff $mot / $basis : $diff');
 
-      // si une seule différence, on retient cette solution
-      if (diff.length == 1 && _pickerStock.contains(diff.first)) {
-        if (solution[diff.first] == null) {
-          solution[diff.first] = [];
+        // si une seule différence, on retient cette solution
+        if (diff.length == 1 && _pickerStock.contains(diff.first)) {
+          if (solution[diff.first] == null) {
+            solution[diff.first] = [];
+          }
+          print('je retiens le mot $mot pour la lettre ${diff.first}');
+          solution[diff.first]!.add(mot);
         }
-        print('je retiens le mot $mot pour la lettre ${diff.first}');
-        solution[diff.first]!.add(mot);
       }
     }
 
@@ -121,6 +120,7 @@ class Capello {
       print('lettre $key : ${value.length} mots');
     });
 
+    // retour selon situation
     if (solution.isEmpty) {
       return 'XXX';
     } else {
@@ -134,5 +134,6 @@ class Capello {
 
       return solutionLetters.first;
     }
+    //return 'XXX';
   }
 }
