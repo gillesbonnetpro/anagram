@@ -23,6 +23,7 @@ class WordLine extends StatefulWidget {
 class _WordLineState extends State<WordLine> {
   List<Pastille> accepted = [];
   List<Pastille> preserved = [];
+  String? suggested;
 
   String getWord() {
     String word = '';
@@ -51,6 +52,7 @@ class _WordLineState extends State<WordLine> {
       setState(() {
         widget.isSelected = false;
         widget.isOneSelected = false;
+        suggested = null;
       });
       selectedLine.value = 0;
     });
@@ -64,31 +66,33 @@ class _WordLineState extends State<WordLine> {
             child: Column(
               children: [
                 ElevatedButton(
-                    onPressed: () {
-                      if (widget.isSelected) {
-                        Capello().checkWord(getWord().toUpperCase())
-                            ? playerChoice.value = GameAction.valid
-                            : print('mot inconnu ${getWord()}');
-                        print('ligne ${widget.id} validée ');
-                      } else {
-                        print('Valide sur ligne non selectionnée');
-                      }
-                    },
-                    child: const Icon(Icons.check_circle)),
+                  onPressed: () {
+                    if (widget.isSelected) {
+                      Capello().checkWord(getWord().toUpperCase())
+                          ? playerChoice.value = GameAction.valid
+                          : print('mot inconnu ${getWord()}');
+                      print('ligne ${widget.id} validée ');
+                    } else {
+                      print('Valide sur ligne non selectionnée');
+                    }
+                  },
+                  child: const Icon(Icons.check_circle),
+                ),
                 ElevatedButton(
-                    onPressed: () {
-                      if (widget.isSelected) {
-                        setState(() {
-                          accepted.clear();
-                          accepted = [...preserved];
-                        });
-                        playerChoice.value = GameAction.cancel;
-                      } else {
-                        // todo informer user
-                        print('Cancel sur ligne non selectionnée');
-                      }
-                    },
-                    child: const Icon(Icons.close)),
+                  onPressed: () {
+                    if (widget.isSelected) {
+                      setState(() {
+                        accepted.clear();
+                        accepted = [...preserved];
+                      });
+                      playerChoice.value = GameAction.cancel;
+                    } else {
+                      // todo informer user
+                      print('Cancel sur ligne non selectionnée');
+                    }
+                  },
+                  child: const Icon(Icons.close),
+                ),
               ],
             ),
           ),
@@ -130,16 +134,33 @@ class _WordLineState extends State<WordLine> {
                 },
                 children: accepted
                     .map(
-                      (pastille) => ReorderableDragStartListener(
-                        key: pastille.key,
-                        index: accepted.indexOf(pastille),
-                        child: Container(child: pastille),
-                      ),
+                      (pastille) => widget.isSelected
+                          ? ReorderableDragStartListener(
+                              key: pastille.key,
+                              index: accepted.indexOf(pastille),
+                              child: Container(child: pastille),
+                            )
+                          : IgnorePointer(
+                              key: pastille.key,
+                              child: Container(child: pastille),
+                            ),
                     )
                     .toList(),
               ),
             ),
           ),
+          if (accepted.isNotEmpty) ...[
+            null == suggested || suggested!.length > 1
+                ? IconButton(
+                    onPressed: () => setState(() {
+                      suggested = Capello().searchOpti(getWord());
+                    }),
+                    icon: null == suggested
+                        ? const Icon(Icons.lightbulb)
+                        : const Icon(Icons.close),
+                  )
+                : Pastille(lettre: suggested!, color: Colors.amber)
+          ]
         ],
       ),
     );

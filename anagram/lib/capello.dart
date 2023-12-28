@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:anagram/notifier.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Capello {
   static final Capello _singleton = Capello._internal();
@@ -23,6 +23,9 @@ class Capello {
     });
 
     File file = File('./assets/res/myODS.txt');
+
+    print('début lecture du fichier');
+
     Future<List<String>> futureContent = file.readAsLines();
     return futureContent.then((list) {
       print('fichier lu. début répartition');
@@ -37,18 +40,16 @@ class Capello {
           dico[word.length]!.add(word.toLowerCase());
         }
       }
-      /*   dico.keys.forEach((letterNb) {
-        print('$letterNb => ${dico[letterNb]?.length ?? 0}');
-      });
 
-      print('${dico[3]}');
-      print('${dico[3]!.last}'); */
       return 'Anna Gram';
     });
   }
 
+// vérifie si le mot existe
   bool checkWord(String candidate) {
     int nbLetters = candidate.length;
+    print('recherche de mots : lng ${nbLetters} pour $candidate');
+    print('recherche parmi ${dico[nbLetters]!.length}');
     bool isOk;
     List<String> around;
 
@@ -61,36 +62,78 @@ class Capello {
       around = [...dico[nbLetters]!];
       around.removeWhere((element) => element[0] != candidate[0]);
       print('initiales : $around');
-    } else {
-      search(candidate);
     }
     return isOk;
   }
 
-  void search(String validated) {
-    print('recherche de complément pour $validated');
-    List<String> lettersCandidate = [];
-    for (String letter in validated.characters) {
-      lettersCandidate.add(letter);
+  // cherche si un mot avec une lettre de + est possible
+  String searchOpti(String basis) {
+    List<String> basisLetters = [];
+    List<String> solutionLetters = [];
+    Map<String, List<String>> solution = {};
+
+    // éclatement mot de base en tableau de lettres
+    for (String letter in basis.characters) {
+      basisLetters.add(letter);
     }
 
-    for (var mot in dico[(validated.length + 1)]!) {
+    // recherche parmi tous les mots de longueur +1
+    for (var mot in dico[(basis.length + 1)]!) {
+      mot = mot.toLowerCase();
+      // print('test du mot $mot');
       List<String> diff = [];
       List<String> motTest = mot.split('');
 
-      for (var lettre in lettersCandidate) {
+      // passage en revue de toutes les lettres du mots validés par le joueur
+      for (var lettre in basisLetters) {
         if (motTest.contains(lettre)) {
           motTest.removeAt(motTest.indexOf(lettre));
         } else {
           diff.add(lettre);
         }
-      }
-      motTest.addAll(diff);
-      if (motTest.length == 1 &&
-          _pickerStock.contains(motTest.first.toLowerCase())) {
-        print(
-            '$validated et $mot sont séparés de ${motTest} - pioche : ${_pickerStock.contains(motTest.first.toLowerCase())}');
+
+        /* motTest.addAll(diff);
+        if (motTest.length == 1 &&
+            _pickerStock.contains(motTest.first.toLowerCase())) {
+          print(
+              '$basis et $mot sont séparés de ${motTest} - pioche : ${_pickerStock.contains(motTest.first.toLowerCase())}');
+        } */
+
+        // cumul des différences de lettres entre les 2 mots;
+        diff.addAll(motTest);
+        //print('diff $mot / $basis : $diff');
+
+        // si une seule différence, on retient cette solution
+        if (diff.length == 1 && _pickerStock.contains(diff.first)) {
+          if (solution[diff.first] == null) {
+            solution[diff.first] = [];
+          }
+          print('je retiens le mot $mot pour la lettre ${diff.first}');
+          solution[diff.first]!.add(mot);
+        }
       }
     }
+
+    // tous les mots sont passés en revue, on retourne
+    // la lettre la plus fréquente
+    solution.forEach((key, value) {
+      print('lettre $key : ${value.length} mots');
+    });
+
+    // retour selon situation
+    if (solution.isEmpty) {
+      return 'XXX';
+    } else {
+      solutionLetters = solution.keys.toList();
+
+      solutionLetters.sort((a, b) => solution[b]!.length - solution[a]!.length);
+
+      print(solutionLetters.isEmpty
+          ? 'pas de solution'
+          : 'je retourne la lettre ${solutionLetters.first}');
+
+      return solutionLetters.first;
+    }
+    //return 'XXX';
   }
 }
