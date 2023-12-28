@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:anagram/notifier.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +19,13 @@ class Capello {
   Future<String?> initiate() {
     pickerStock.addListener(() {
       _pickerStock = pickerStock.value;
-      print('stock : $_pickerStock');
+      //    print('stock : $_pickerStock');
     });
 
     File file = File('./assets/res/myODS.txt');
+
     print('début lecture du fichier');
+ 
     Future<List<String>> futureContent = file.readAsLines();
     return futureContent.then((list) {
       print('fichier lu. début répartition');
@@ -37,66 +40,34 @@ class Capello {
           dico[word.length]!.add(word.toLowerCase());
         }
       }
-      /*   dico.keys.forEach((letterNb) {
-        print('$letterNb => ${dico[letterNb]?.length ?? 0}');
-      });
-
      
-      print('${dico[3]!.last}'); */
-
-      print('${dico[3]}');
       return 'Anna Gram';
     });
   }
 
 // vérifie si le mot existe
   bool checkWord(String candidate) {
-    print('recherche de mots : lng ${candidate.length} pour $candidate');
-    print('recherche parmi ${dico[candidate.length]!.length}');
+    int nbLetters = candidate.length;
+    print('recherche de mots : lng ${nbLetters} pour $candidate');
+    print('recherche parmi ${dico[nbLetters]!.length}');
     bool isOk;
     List<String> around;
+    
 
     candidate = candidate.toLowerCase();
 
-    isOk = dico[candidate.length] == null
+    isOk = dico[nbLetters] == null
         ? false
-        : dico[candidate.length]!.contains(candidate);
+        : dico[nbLetters]!.contains(candidate);
 
     if (!isOk) {
-      around = [...dico[candidate.length]!];
+      around = [...dico[nbLetters]!];
       around.removeWhere((element) => element[0] != candidate[0]);
       print('initiales : $around');
     }
     return isOk;
   }
 
-  /* 
-  String search(String validated) {
-    print('recherche de complément pour $validated');
-    List<String> lettersCandidate = [];
-    List<String> diff = [];
-
-    for (String letter in validated.characters) {
-      lettersCandidate.add(letter);
-    }
-
-    for (var mot in dico[(validated.length + 1)]!) {
-      List<String> motTest = mot.split('');
-
-      for (var lettre in lettersCandidate) {
-        if (motTest.contains(lettre)) {
-          motTest.removeAt(motTest.indexOf(lettre));
-        } else {
-          diff.add(lettre);
-        }
-      }
-      // motTest.addAll(diff);
-      diff.addAll(motTest);
-    }
-
-    return diff.length == 1 ? diff.first : '';
-  }
- */
 
   // cherche si un mot avec une lettre de + est possible
   String searchOpti(String basis) {
@@ -122,6 +93,13 @@ class Capello {
         } else {
           diff.add(lettre);
         }
+
+      motTest.addAll(diff);
+      if (motTest.length == 1 &&
+          _pickerStock.contains(motTest.first.toLowerCase())) {
+        print(
+            '$validated et $mot sont séparés de ${motTest} - pioche : ${_pickerStock.contains(motTest.first.toLowerCase())}');
+
       }
       // cumul des différences de lettres entre les 2 mots;
       diff.addAll(motTest);
