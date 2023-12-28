@@ -29,7 +29,6 @@ class Capello {
     Future<List<String>> futureContent = file.readAsLines();
     return futureContent.then((list) {
       print('fichier lu. début répartition');
-      // List<String> ccut = c.split('\n');
       print('nb mots ${list.length}');
 
       for (String word in list) {
@@ -80,37 +79,39 @@ class Capello {
     // recherche parmi tous les mots de longueur +1
     for (var mot in dico[(basis.length + 1)]!) {
       mot = mot.toLowerCase();
-      // print('test du mot $mot');
+      //print('test du mot $mot');
       List<String> diff = [];
       List<String> motTest = mot.split('');
 
-      // passage en revue de toutes les lettres du mots validés par le joueur
+      // si le mot du dico contient une lettre du mot validé
+      // on la retire du mot du dico
+      // sinon on l'ajoute en tant que différence
       for (var lettre in basisLetters) {
         if (motTest.contains(lettre)) {
           motTest.removeAt(motTest.indexOf(lettre));
         } else {
           diff.add(lettre);
         }
+      }
 
-        /* motTest.addAll(diff);
+      /* motTest.addAll(diff);
         if (motTest.length == 1 &&
             _pickerStock.contains(motTest.first.toLowerCase())) {
           print(
               '$basis et $mot sont séparés de ${motTest} - pioche : ${_pickerStock.contains(motTest.first.toLowerCase())}');
         } */
 
-        // cumul des différences de lettres entre les 2 mots;
-        diff.addAll(motTest);
-        //print('diff $mot / $basis : $diff');
+      // cumul des différences de lettres entre les 2 mots;
+      diff.addAll(motTest);
+      //print('diff $mot / $basis : $diff');
 
-        // si une seule différence, on retient cette solution
-        if (diff.length == 1 && _pickerStock.contains(diff.first)) {
-          if (solution[diff.first] == null) {
-            solution[diff.first] = [];
-          }
-          print('je retiens le mot $mot pour la lettre ${diff.first}');
-          solution[diff.first]!.add(mot);
+      // si une seule différence, on retient cette solution
+      if (diff.length == 1 && _pickerStock.contains(diff.first)) {
+        if (solution[diff.first] == null) {
+          solution[diff.first] = [];
         }
+        print('je retiens le mot $mot pour la lettre ${diff.first}');
+        solution[diff.first]!.add(mot);
       }
     }
 
