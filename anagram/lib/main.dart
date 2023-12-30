@@ -1,10 +1,9 @@
 import 'package:anagram/capello.dart';
 import 'package:anagram/game_board.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -12,13 +11,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    /*   print('je lance la lecture');
-    rootBundle.loadString('assets/res/ODS231219.txt').then((value) {
-      print('$value');
-    }).catchError((error) {
-      print('$error');
-    });
- */
     return MaterialApp(
       title: 'Anagram',
       theme: ThemeData(
@@ -57,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   body: const GameBoard(),
                 )
-              : Center(child: CircularProgressIndicator());
+              : const Center(child: CircularProgressIndicator());
         });
   }
 }
