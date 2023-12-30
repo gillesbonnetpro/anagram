@@ -159,7 +159,8 @@ class _WordLineState extends State<WordLine> {
                         ? const Icon(Icons.lightbulb)
                         : const Icon(Icons.close),
                   )
-                : Pastille(lettre: suggested!, color: Colors.amber)
+                : Pastille(
+                    lettre: suggested!, color: Colors.amber, animated: true)
           ]
         ],
       ),
