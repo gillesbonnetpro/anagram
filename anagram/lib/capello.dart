@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
+
 import 'package:anagram/notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart';
 
 class Capello {
   static final Capello _singleton = Capello._internal();
@@ -15,6 +15,7 @@ class Capello {
 
   Map<int, List<String>> dico = {};
   List<String> _pickerStock = [];
+  String path = './assets/res/myODS.txt';
 
   Future<String?> initiate() {
     pickerStock.addListener(() {
@@ -22,14 +23,14 @@ class Capello {
       //    print('stock : $_pickerStock');
     });
 
-    File file = File('./assets/res/myODS.txt');
+    Future<String> futureContent = rootBundle.loadString(path);
 
-    print('début lecture du fichier');
-
-    Future<List<String>> futureContent = file.readAsLines();
-    return futureContent.then((list) {
+    return futureContent.then((wordList) {
       print('fichier lu. début répartition');
-      print('nb mots ${list.length}');
+      print('nb mots ${wordList.length}');
+      LineSplitter ls = const LineSplitter();
+
+      List<String> list = ls.convert(wordList);
 
       for (String word in list) {
         if (word.length > 2 && word.length < 15) {
@@ -39,7 +40,6 @@ class Capello {
           dico[word.length]!.add(word.toLowerCase());
         }
       }
-
       return 'Anna Gram';
     });
   }
