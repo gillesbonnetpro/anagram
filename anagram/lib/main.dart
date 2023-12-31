@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:anagram/capello.dart';
 import 'package:anagram/game_board.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+          dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch}),
       debugShowCheckedModeBanner: false,
       title: 'Anagram',
       theme: ThemeData(

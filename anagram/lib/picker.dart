@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:anagram/notifier.dart';
 import 'package:anagram/pastille.dart';
 import 'package:flutter/material.dart';

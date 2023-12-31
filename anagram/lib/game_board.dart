@@ -1,6 +1,7 @@
 import 'package:anagram/picker.dart';
 import 'package:anagram/word_line.dart';
 import 'package:flutter/material.dart';
+import 'package:anagram/notifier.dart';
 
 class GameBoard extends StatefulWidget {
   const GameBoard({super.key});
@@ -9,24 +10,59 @@ class GameBoard extends StatefulWidget {
 }
 
 class _GameBoardState extends State<GameBoard> {
-  List<WordLine> lineList = [];
+  List<WordLine> lineList = [
+    WordLine(id: 1),
+    WordLine(id: 2),
+    WordLine(id: 3),
+  ];
+
+  void addLine() {
+    selectedLine.value = 0;
+    lineList.add(
+      WordLine(
+        id: (lineList.length + 1),
+      ),
+    );
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    lineList = [
-      WordLine(id: 1),
-      WordLine(id: 2),
-      WordLine(id: 3),
-      WordLine(id: 4),
-      WordLine(id: 5),
-    ];
-
     return Center(
       child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [...lineList, const Picker()]),
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const NeverScrollableScrollPhysics(),
+                child: Column(
+                  children: lineList,
+                ),
+              ),
+              /* ListView.builder(
+                itemCount: lineList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return WordLine(id: index + 1);
+                },
+              ), */
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Picker(),
+                Tooltip(
+                  message: 'Ajouter une ligne',
+                  child: ElevatedButton(
+                    onPressed: () => addLine(),
+                    child: const Text('+'),
+                  ),
+                )
+              ],
+            )
+          ]),
     );
   }
 }
