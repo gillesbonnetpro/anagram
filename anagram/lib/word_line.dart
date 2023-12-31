@@ -25,12 +25,24 @@ class _WordLineState extends State<WordLine> {
   List<Pastille> preserved = [];
   String? suggested;
 
-  String getWord() {
+  // retourne la suite de pastilles sous forme de String
+  String getWordAsString() {
     String word = '';
     for (var pastille in accepted) {
       word += pastille.lettre;
     }
     return word;
+  }
+
+  // déclenché lors de la validation d'un mot
+  void validated() {
+    playerChoice.value = GameAction.valid;
+    print('ligne ${widget.id} validée ');
+  }
+
+// déclenché lors du refus d'un mot
+  void refused() {
+    print('mot inconnu ${getWordAsString()}');
   }
 
   @override
@@ -68,10 +80,9 @@ class _WordLineState extends State<WordLine> {
                 ElevatedButton(
                   onPressed: () {
                     if (widget.isSelected) {
-                      Capello().checkWord(getWord().toUpperCase())
-                          ? playerChoice.value = GameAction.valid
-                          : print('mot inconnu ${getWord()}');
-                      print('ligne ${widget.id} validée ');
+                      Capello().checkWord(getWordAsString().toUpperCase())
+                          ? validated()
+                          : refused();
                     } else {
                       print('Valide sur ligne non selectionnée');
                     }
@@ -153,7 +164,7 @@ class _WordLineState extends State<WordLine> {
             null == suggested || suggested!.length > 1
                 ? IconButton(
                     onPressed: () => setState(() {
-                      suggested = Capello().searchOpti(getWord());
+                      suggested = Capello().searchOpti(getWordAsString());
                     }),
                     icon: null == suggested
                         ? const Icon(Icons.lightbulb)
