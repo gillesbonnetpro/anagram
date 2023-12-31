@@ -42,7 +42,9 @@ class Pastille extends StatelessWidget {
 
     if (animated) {
       animated = false;
-      return pastille.animate().scale(duration: 500.ms);
+      return pastille
+          .animate()
+          .scale(duration: 1000.ms, curve: Curves.easeInOutBack);
     } else {
       return pastille;
     }
