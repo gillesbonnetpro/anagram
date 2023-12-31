@@ -37,25 +37,34 @@ class _WordLineState extends State<WordLine> {
   // en cas de validation du mot
   void validated() {
     print('mot validé ${getWordAsString()}');
-    accepted.map(
-      (past) => Pastille(
-          key: past.key,
-          lettre: past.lettre,
-          color: past.color,
-          animation: PastAnim.validated),
-    );
+    setState(() {
+      accepted = accepted
+          .map(
+            (past) => Pastille(
+                key: past.key,
+                lettre: past.lettre,
+                color: past.color,
+                animation: PastAnim.validated),
+          )
+          .toList();
+    });
+
     playerChoice.value = GameAction.valid;
   }
 
   // en cas de refus du mot
   void refused() {
-    accepted.map(
-      (past) => Pastille(
-          key: past.key,
-          lettre: past.lettre,
-          color: past.color,
-          animation: PastAnim.refused),
-    );
+    setState(() {
+      accepted = accepted
+          .map(
+            (past) => Pastille(
+                key: past.key,
+                lettre: past.lettre,
+                color: past.color,
+                animation: PastAnim.refused),
+          )
+          .toList();
+    });
     print('mot refusé ${getWordAsString()}');
   }
 
