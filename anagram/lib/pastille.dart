@@ -40,6 +40,7 @@ class Pastille extends StatelessWidget {
       ),
     );
 
+
     switch (animation) {
       case PastAnim.appear:
         animation = PastAnim.none;
@@ -58,6 +59,7 @@ class Pastille extends StatelessWidget {
         }).shake(duration: 1000.ms);
       case PastAnim.none:
         return pastille;
+
     }
   }
 }
