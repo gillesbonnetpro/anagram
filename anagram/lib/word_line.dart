@@ -25,12 +25,38 @@ class _WordLineState extends State<WordLine> {
   List<Pastille> preserved = [];
   String? suggested;
 
-  String getWord() {
+  // retourne la liste de pastilles sous forme de String
+  String getWordAsString() {
     String word = '';
     for (var pastille in accepted) {
       word += pastille.lettre;
     }
     return word;
+  }
+
+  // en cas de validation du mot
+  void validated() {
+    print('mot validé ${getWordAsString()}');
+    accepted.map(
+      (past) => Pastille(
+          key: past.key,
+          lettre: past.lettre,
+          color: past.color,
+          animation: PastAnim.validated),
+    );
+    playerChoice.value = GameAction.valid;
+  }
+
+  // en cas de refus du mot
+  void refused() {
+    accepted.map(
+      (past) => Pastille(
+          key: past.key,
+          lettre: past.lettre,
+          color: past.color,
+          animation: PastAnim.refused),
+    );
+    print('mot refusé ${getWordAsString()}');
   }
 
   @override
@@ -68,10 +94,9 @@ class _WordLineState extends State<WordLine> {
                 ElevatedButton(
                   onPressed: () {
                     if (widget.isSelected) {
-                      Capello().checkWord(getWord().toUpperCase())
-                          ? playerChoice.value = GameAction.valid
-                          : print('mot inconnu ${getWord()}');
-                      print('ligne ${widget.id} validée ');
+                      Capello().checkWord(getWordAsString().toUpperCase())
+                          ? validated()
+                          : refused();
                     } else {
                       print('Valide sur ligne non selectionnée');
                     }
@@ -153,14 +178,16 @@ class _WordLineState extends State<WordLine> {
             null == suggested || suggested!.length > 1
                 ? IconButton(
                     onPressed: () => setState(() {
-                      suggested = Capello().searchOpti(getWord());
+                      suggested = Capello().searchOpti(getWordAsString());
                     }),
                     icon: null == suggested
                         ? const Icon(Icons.lightbulb)
                         : const Icon(Icons.close),
                   )
                 : Pastille(
-                    lettre: suggested!, color: Colors.amber, animated: true)
+                    lettre: suggested!,
+                    color: Colors.amber,
+                    animation: PastAnim.appear)
           ]
         ],
       ),

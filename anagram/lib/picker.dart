@@ -128,7 +128,7 @@ class _PickerState extends State<Picker> {
             lettre: letters[rnd],
             color: Colors.blue,
             key: UniqueKey(),
-            animated: true,
+            animation: PastAnim.appear,
           ),
         );
         letters.remove(letters[rnd]);

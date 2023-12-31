@@ -4,13 +4,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 class Pastille extends StatelessWidget {
   final String lettre;
   final Color color;
-  bool animated;
+  PastAnim animation;
 
   Pastille(
       {super.key,
       required this.lettre,
       required this.color,
-      required this.animated});
+      required this.animation});
 
   TextStyle style = const TextStyle(
       color: Colors.white,
@@ -40,13 +40,24 @@ class Pastille extends StatelessWidget {
       ),
     );
 
-    if (animated) {
-      animated = false;
-      return pastille
-          .animate()
-          .scale(duration: 1000.ms, curve: Curves.easeInOutBack);
-    } else {
-      return pastille;
+    switch (animation) {
+      case PastAnim.appear:
+        animation = PastAnim.none;
+        return pastille
+            .animate()
+            .scale(duration: 1000.ms, curve: Curves.easeInOutBack);
+      case PastAnim.validated:
+        animation = PastAnim.none;
+        return pastille
+            .animate()
+            .shimmer(duration: 500.ms, color: Colors.amber);
+      case PastAnim.refused:
+        animation = PastAnim.none;
+        return pastille.animate().shake(duration: 1000.ms);
+      case PastAnim.none:
+        return pastille;
     }
   }
 }
+
+enum PastAnim { appear, validated, refused, none }
