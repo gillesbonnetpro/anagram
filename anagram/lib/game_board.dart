@@ -36,7 +36,7 @@ class _GameBoardState extends State<GameBoard> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   children: lineList,
                 ),
