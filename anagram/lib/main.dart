@@ -33,13 +33,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var s1 = Capello();
+  var cappello = Capello();
 
   @override
   Widget build(BuildContext context) {
     ;
     return FutureBuilder<String?>(
-        future: s1.initiate(),
+        future: cappello.initiate(),
         builder: (context, snapshot) {
           return snapshot.hasData
               ? Scaffold(

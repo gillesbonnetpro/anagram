@@ -47,22 +47,27 @@ class Capello {
 // vérifie si le mot existe
   bool checkWord(String candidate) {
     int nbLetters = candidate.length;
-    print('recherche de mots : lng ${nbLetters} pour $candidate');
-    print('recherche parmi ${dico[nbLetters]!.length}');
-    bool isOk;
-    List<String> around;
+    if (nbLetters < 3) {
+      return false;
+    } else {
+      print('recherche de mots : lng ${nbLetters} pour $candidate');
+      print('recherche parmi ${dico[nbLetters]!.length}');
+      bool isOk;
+      List<String> around;
 
-    candidate = candidate.toLowerCase();
+      candidate = candidate.toLowerCase();
 
-    isOk =
-        dico[nbLetters] == null ? false : dico[nbLetters]!.contains(candidate);
+      isOk = dico[nbLetters] == null
+          ? false
+          : dico[nbLetters]!.contains(candidate);
 
-    if (!isOk) {
-      around = [...dico[nbLetters]!];
-      around.removeWhere((element) => element[0] != candidate[0]);
-      print('initiales : $around');
+      if (!isOk) {
+        around = [...dico[nbLetters]!];
+        around.removeWhere((element) => element[0] != candidate[0]);
+        print('initiales : $around');
+      }
+      return isOk;
     }
-    return isOk;
   }
 
   // cherche si un mot avec une lettre de + est possible

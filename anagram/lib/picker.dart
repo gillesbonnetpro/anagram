@@ -126,14 +126,14 @@ class _PickerState extends State<Picker> {
         pastList.add(
           Pastille(
             lettre: letters[rnd],
-            color: Colors.blue,
+            color: Colors.purple,
             key: UniqueKey(),
-            animated: true,
+            animation: PastAnim.appear,
           ),
         );
         letters.remove(letters[rnd]);
       });
-      pickerStock.value = pastList.map((e) => e.lettre).toList();
+      // pickerStock.value = pastList.map((e) => e.lettre).toList();
     }
 
     pickerStock.value = pastList.map((e) => e.lettre).toList();
@@ -173,51 +173,29 @@ class _PickerState extends State<Picker> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+        decoration: BoxDecoration(border: Border.all(color: Colors.deepPurple)),
         height: 60,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: pastList
-                  .map(
-                    (pastille) => Draggable<Pastille>(
-                      data: pastille,
-                      feedback: pastille,
-                      childWhenDragging: Opacity(
-                        opacity: 0.5,
-                        child: pastille,
-                      ),
-                      child: pastille,
-                      onDragCompleted: () {
-                        setState(() {
-                          pastList.removeWhere((past) => past == pastille);
-                        });
-                      },
-                    ),
-                  )
-                  .toList(),
-            ),
-            /*   IconButton(
-                onPressed: () {
-                  int rnd = Random().nextInt(letters.length);
-                  setState(() {
-                    pastList.add(
-                      Pastille(
-                        lettre: letters[rnd],
-                        color: Colors.blue,
-                        key: UniqueKey(),
-                      ),
-                    );
-                    letters.remove(letters[rnd]);
-                    pickerStock.value = pastList.map((e) => e.lettre).toList();
-                  });
-                },
-                icon: const Icon(Icons.add)) */
-          ],
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: pastList
+              .map(
+                (pastille) => Draggable<Pastille>(
+                  data: pastille,
+                  feedback: pastille,
+                  childWhenDragging: Opacity(
+                    opacity: 0.5,
+                    child: pastille,
+                  ),
+                  child: pastille,
+                  onDragCompleted: () {
+                    setState(() {
+                      pastList.removeWhere((past) => past == pastille);
+                    });
+                  },
+                ),
+              )
+              .toList(),
         ),
       ),
     );

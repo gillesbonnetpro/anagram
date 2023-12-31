@@ -2,6 +2,7 @@ import 'package:anagram/capello.dart';
 import 'package:anagram/pastille.dart';
 import 'package:flutter/material.dart';
 import 'package:anagram/notifier.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class WordLine extends StatefulWidget {
   WordLine({
@@ -25,12 +26,46 @@ class _WordLineState extends State<WordLine> {
   List<Pastille> preserved = [];
   String? suggested;
 
-  String getWord() {
+  List<Effect> shake = [ShakeEffect(duration: 1.seconds)];
+  List<Effect> none = [];
+  late List<Effect> actual = [];
+
+  // retourne la liste de pastilles sous forme de String
+  String getWordAsString() {
     String word = '';
     for (var pastille in accepted) {
       word += pastille.lettre;
     }
     return word;
+  }
+
+  // en cas de validation du mot
+  void validated() {
+    print('mot validé ${getWordAsString()}');
+    setState(() {
+      accepted = accepted
+          .map(
+            (past) => Pastille(
+                key: past.key,
+                lettre: past.lettre,
+                color: Colors.deepPurple,
+                animation: PastAnim.validated),
+          )
+          .toList();
+    });
+
+    playerChoice.value = GameAction.valid;
+  }
+
+  // en cas de refus du mot
+  void refused() {
+    setState(() {
+      actual = shake;
+      Future.delayed(const Duration(seconds: 1)).then((_) {
+        actual = none;
+      });
+    });
+    print('mot refusé ${getWordAsString()}');
   }
 
   @override
@@ -62,23 +97,26 @@ class _WordLineState extends State<WordLine> {
       child: Row(
         children: [
           SizedBox(
-            width: 50,
+            width: 40,
             child: Column(
               children: [
-                ElevatedButton(
+                IconButton(
                   onPressed: () {
                     if (widget.isSelected) {
-                      Capello().checkWord(getWord().toUpperCase())
-                          ? playerChoice.value = GameAction.valid
-                          : print('mot inconnu ${getWord()}');
-                      print('ligne ${widget.id} validée ');
+                      Capello().checkWord(getWordAsString().toUpperCase())
+                          ? validated()
+                          : refused();
                     } else {
                       print('Valide sur ligne non selectionnée');
                     }
                   },
-                  child: const Icon(Icons.check_circle),
+                  icon: const Icon(
+                    Icons.check_circle,
+                    size: 20,
+                    color: Colors.deepPurpleAccent,
+                  ),
                 ),
-                ElevatedButton(
+                IconButton(
                   onPressed: () {
                     if (widget.isSelected) {
                       setState(() {
@@ -91,7 +129,10 @@ class _WordLineState extends State<WordLine> {
                       print('Cancel sur ligne non selectionnée');
                     }
                   },
-                  child: const Icon(Icons.close),
+                  icon: const Icon(
+                    Icons.close,
+                    size: 20,
+                  ),
                 ),
               ],
             ),
@@ -112,12 +153,15 @@ class _WordLineState extends State<WordLine> {
             },
             onLeave: null,
             builder: (context, candidates, rejected) => Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: widget.isSelected ||
+                        (candidates.isNotEmpty && !widget.isOneSelected)
+                    ? Colors.amber
+                    : Colors.grey,
+              ),
               height: 60,
               width: 700,
-              color: widget.isSelected ||
-                      (candidates.isNotEmpty && !widget.isOneSelected)
-                  ? Colors.amber
-                  : Colors.grey,
               child: ReorderableListView(
                 proxyDecorator: (child, index, animation) => child,
                 padding: EdgeInsets.zero,
@@ -148,19 +192,21 @@ class _WordLineState extends State<WordLine> {
                     .toList(),
               ),
             ),
-          ),
+          ).animate(effects: actual),
           if (accepted.isNotEmpty) ...[
             null == suggested || suggested!.length > 1
                 ? IconButton(
                     onPressed: () => setState(() {
-                      suggested = Capello().searchOpti(getWord());
+                      suggested = Capello().searchOpti(getWordAsString());
                     }),
                     icon: null == suggested
                         ? const Icon(Icons.lightbulb)
                         : const Icon(Icons.close),
                   )
                 : Pastille(
-                    lettre: suggested!, color: Colors.amber, animated: true)
+                    lettre: suggested!,
+                    color: Colors.amber,
+                    animation: PastAnim.appear)
           ]
         ],
       ),
