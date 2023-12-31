@@ -26,6 +26,10 @@ class _WordLineState extends State<WordLine> {
   List<Pastille> preserved = [];
   String? suggested;
 
+  List<Effect> shake = [ShakeEffect(duration: 1.seconds)];
+  List<Effect> none = [];
+  late List<Effect> actual = [];
+
   // retourne la liste de pastilles sous forme de String
   String getWordAsString() {
     String word = '';
@@ -56,15 +60,10 @@ class _WordLineState extends State<WordLine> {
   // en cas de refus du mot
   void refused() {
     setState(() {
-      accepted = accepted
-          .map(
-            (past) => Pastille(
-                key: past.key,
-                lettre: past.lettre,
-                color: past.color,
-                animation: PastAnim.refused),
-          )
-          .toList();
+      actual = shake;
+      Future.delayed(const Duration(seconds: 1)).then((_) {
+        actual = none;
+      });
     });
     print('mot refusé ${getWordAsString()}');
   }
@@ -193,7 +192,7 @@ class _WordLineState extends State<WordLine> {
                     .toList(),
               ),
             ),
-          ),
+          ).animate(effects: actual),
           if (accepted.isNotEmpty) ...[
             null == suggested || suggested!.length > 1
                 ? IconButton(
