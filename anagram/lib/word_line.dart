@@ -44,7 +44,7 @@ class _WordLineState extends State<WordLine> {
             (past) => Pastille(
                 key: past.key,
                 lettre: past.lettre,
-                color: past.color,
+                color: Colors.deepPurple,
                 animation: PastAnim.validated),
           )
           .toList();
@@ -98,10 +98,10 @@ class _WordLineState extends State<WordLine> {
       child: Row(
         children: [
           SizedBox(
-            width: 50,
+            width: 40,
             child: Column(
               children: [
-                ElevatedButton(
+                IconButton(
                   onPressed: () {
                     if (widget.isSelected) {
                       Capello().checkWord(getWordAsString().toUpperCase())
@@ -111,9 +111,13 @@ class _WordLineState extends State<WordLine> {
                       print('Valide sur ligne non selectionnée');
                     }
                   },
-                  child: const Icon(Icons.check_circle),
+                  icon: const Icon(
+                    Icons.check_circle,
+                    size: 20,
+                    color: Colors.deepPurpleAccent,
+                  ),
                 ),
-                ElevatedButton(
+                IconButton(
                   onPressed: () {
                     if (widget.isSelected) {
                       setState(() {
@@ -126,7 +130,10 @@ class _WordLineState extends State<WordLine> {
                       print('Cancel sur ligne non selectionnée');
                     }
                   },
-                  child: const Icon(Icons.close),
+                  icon: const Icon(
+                    Icons.close,
+                    size: 20,
+                  ),
                 ),
               ],
             ),
@@ -147,12 +154,15 @@ class _WordLineState extends State<WordLine> {
             },
             onLeave: null,
             builder: (context, candidates, rejected) => Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: widget.isSelected ||
+                        (candidates.isNotEmpty && !widget.isOneSelected)
+                    ? Colors.amber
+                    : Colors.grey,
+              ),
               height: 60,
               width: 700,
-              color: widget.isSelected ||
-                      (candidates.isNotEmpty && !widget.isOneSelected)
-                  ? Colors.amber
-                  : Colors.grey,
               child: ReorderableListView(
                 proxyDecorator: (child, index, animation) => child,
                 padding: EdgeInsets.zero,
