@@ -96,7 +96,9 @@ class _WordLineState extends State<WordLine> {
       switch (wordLineState) {
         case WordLineState.validated:
           print("liste animée pour validation");
-          return AnimateList(
+          return Container();
+
+          AnimateList(
               effects: validatedWord,
               interval: const Duration(milliseconds: 400),
               children: pastilles);
