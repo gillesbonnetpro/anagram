@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:anagram/capello.dart';
 import 'package:anagram/game_board.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+          dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch}),
       debugShowCheckedModeBanner: false,
       title: 'Anagram',
       theme: ThemeData(
@@ -37,7 +40,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    ;
     return FutureBuilder<String?>(
         future: cappello.initiate(),
         builder: (context, snapshot) {
@@ -46,7 +48,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   appBar: AppBar(
                     backgroundColor:
                         Theme.of(context).colorScheme.inversePrimary,
-                    title: FittedBox(child: Text(snapshot.data!)),
+                    title: FittedBox(
+                      child: Text(snapshot.data!),
+                    ),
                   ),
                   body: const GameBoard(),
                 )

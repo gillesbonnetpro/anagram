@@ -21,7 +21,7 @@ class Pastille extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget pastille = Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(1.0),
       child: Container(
         width: 50,
         height: 50,
@@ -39,7 +39,6 @@ class Pastille extends StatelessWidget {
         ),
       ),
     );
-
 
     switch (animation) {
       case PastAnim.appear:
@@ -59,7 +58,6 @@ class Pastille extends StatelessWidget {
         }).shake(duration: 1000.ms);
       case PastAnim.none:
         return pastille;
-
     }
   }
 }
