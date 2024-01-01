@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
-ValueNotifier<List<String>> pickerStock = ValueNotifier<List<String>>([]);
+ValueNotifier<List<String>> pickerStockNotifier =
+    ValueNotifier<List<String>>([]);
 
-ValueNotifier<int> selectedLine = ValueNotifier<int>(0);
+ValueNotifier<int> selectedLineNotifier = ValueNotifier<int>(0);
 
-ValueNotifier<GameAction> playerChoice =
+ValueNotifier<int> scoreNotifier = ValueNotifier<int>(0);
+
+ValueNotifier<GameAction> playerChoiceNotifier =
     ValueNotifier<GameAction>(GameAction.wait);
 
 // Valeurs possibles à transmettre lors d'une action de jeu

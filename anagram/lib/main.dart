@@ -1,7 +1,10 @@
 import 'dart:ui';
 import 'package:anagram/capello.dart';
 import 'package:anagram/game_board.dart';
+import 'package:anagram/notifier.dart';
+import 'package:anagram/pastille.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,9 +40,30 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var cappello = Capello();
+  int score = 0;
+  Pastille scorePast =
+      Pastille(lettre: '0', color: Colors.blue, animation: PastAnim.none);
 
   @override
   Widget build(BuildContext context) {
+    scoreNotifier.addListener(() {
+      setState(() {
+        score = scoreNotifier.value;
+        scorePast = Pastille(
+            lettre: score.toString(),
+            color: Colors.purple,
+            animation: PastAnim.validated);
+      });
+      Future.delayed(const Duration(milliseconds: 3000)).then(
+        (_) => setState(() {
+          scorePast = Pastille(
+              lettre: scorePast.lettre,
+              color: scorePast.color,
+              animation: PastAnim.none);
+        }),
+      );
+    });
+
     return FutureBuilder<String?>(
         future: cappello.initiate(),
         builder: (context, snapshot) {
@@ -51,6 +75,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     title: FittedBox(
                       child: Text(snapshot.data!),
                     ),
+                    actions: [
+                      FittedBox(child: scorePast),
+                    ],
                   ),
                   body: const GameBoard(),
                 )

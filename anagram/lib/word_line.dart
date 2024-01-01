@@ -54,7 +54,7 @@ class _WordLineState extends State<WordLine> {
           .toList();
     });
 
-    playerChoice.value = GameAction.valid;
+    playerChoiceNotifier.value = GameAction.valid;
   }
 
   // en cas de refus du mot
@@ -71,10 +71,10 @@ class _WordLineState extends State<WordLine> {
   @override
   Widget build(BuildContext context) {
 // à l'écoute de si une ligne est sélectionnée
-    selectedLine.addListener(() {
+    selectedLineNotifier.addListener(() {
       setState(() {
-        widget.isSelected = selectedLine.value == widget.id;
-        widget.isOneSelected = selectedLine.value != 0;
+        widget.isSelected = selectedLineNotifier.value == widget.id;
+        widget.isOneSelected = selectedLineNotifier.value != 0;
         if (widget.isSelected) {
           preserved.clear();
           preserved = [...accepted];
@@ -83,13 +83,13 @@ class _WordLineState extends State<WordLine> {
     });
 
     // à l'écoute de si une ligne libère la sélection
-    playerChoice.addListener(() {
+    playerChoiceNotifier.addListener(() {
       setState(() {
         widget.isSelected = false;
         widget.isOneSelected = false;
         suggested = null;
       });
-      selectedLine.value = 0;
+      selectedLineNotifier.value = 0;
     });
 
     return Padding(
@@ -103,7 +103,8 @@ class _WordLineState extends State<WordLine> {
                 IconButton(
                   onPressed: () {
                     if (widget.isSelected) {
-                      Capello().checkWord(getWordAsString().toUpperCase())
+                      Capello().checkWord(
+                              widget.id, getWordAsString().toUpperCase())
                           ? validated()
                           : refused();
                     } else {
@@ -123,7 +124,7 @@ class _WordLineState extends State<WordLine> {
                         accepted.clear();
                         accepted = [...preserved];
                       });
-                      playerChoice.value = GameAction.cancel;
+                      playerChoiceNotifier.value = GameAction.cancel;
                     } else {
                       // todo informer user
                       print('Cancel sur ligne non selectionnée');
@@ -144,7 +145,7 @@ class _WordLineState extends State<WordLine> {
                   (widget.isSelected || !widget.isOneSelected),
               onAccept: (pastille) {
                 if (!widget.isSelected) {
-                  selectedLine.value = widget.id;
+                  selectedLineNotifier.value = widget.id;
                 }
                 setState(() {
                   accepted.add(pastille);

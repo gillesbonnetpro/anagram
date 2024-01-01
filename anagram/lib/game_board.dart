@@ -17,7 +17,7 @@ class _GameBoardState extends State<GameBoard> {
   ];
 
   void addLine() {
-    selectedLine.value = 0;
+    selectedLineNotifier.value = 0;
     lineList.add(
       WordLine(
         id: (lineList.length + 1),

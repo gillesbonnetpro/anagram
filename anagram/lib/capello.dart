@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:anagram/notifier.dart';
 import 'package:flutter/material.dart';
@@ -15,37 +16,48 @@ class Capello {
 
   Map<int, List<String>> dico = {};
   List<String> _pickerStock = [];
-  String path = './assets/res/myODS.txt';
+  Map<int, String> plato = {};
 
   Future<String?> initiate() {
-    pickerStock.addListener(() {
-      _pickerStock = pickerStock.value;
+    pickerStockNotifier.addListener(() {
+      _pickerStock = pickerStockNotifier.value;
       //    print('stock : $_pickerStock');
     });
 
+    //String path = './assets/res/myODS.txt';
+    String path = './assets/res/agODS.txt';
     Future<String> futureContent = rootBundle.loadString(path);
+
+    /* File file = File('./assets/res/agODS.txt');
+    String agODS = ''; */
 
     return futureContent.then((wordList) {
       print('fichier lu. début répartition');
       print('nb mots ${wordList.length}');
       LineSplitter ls = const LineSplitter();
-
       List<String> list = ls.convert(wordList);
 
       for (String word in list) {
-        if (word.length > 2 && word.length < 15) {
+        if (word.length > 2 &&
+            word.length < 13 &&
+            RegExp(r'^[a-zA-Z]+$').hasMatch(word)) {
           if (dico[word.length] == null) {
             dico[word.length] = [];
           }
+          /*     if (!agODS.contains(word)) {
+            agODS += '$word\n';
+          } */
+
           dico[word.length]!.add(word.toLowerCase());
         }
       }
+      // file.writeAsString(agODS).then((value) => 'écrit $agODS');
       return 'Anna Gram';
     });
   }
 
 // vérifie si le mot existe
-  bool checkWord(String candidate) {
+  bool checkWord(int lineId, String candidate) {
     int nbLetters = candidate.length;
     if (nbLetters < 3) {
       return false;
@@ -65,6 +77,10 @@ class Capello {
         around = [...dico[nbLetters]!];
         around.removeWhere((element) => element[0] != candidate[0]);
         print('initiales : $around');
+      } else {
+        // update plato pour le calcul des scores
+        plato[lineId] = candidate;
+        updateScore();
       }
       return isOk;
     }
@@ -116,8 +132,10 @@ class Capello {
           if (solution[diff.first] == null) {
             solution[diff.first] = [];
           }
-          print('je retiens le mot $mot pour la lettre ${diff.first}');
-          solution[diff.first]!.add(mot);
+          if (!solution[diff.first]!.contains(mot)) {
+            print('je retiens le mot $mot pour la lettre ${diff.first}');
+            solution[diff.first]!.add(mot);
+          }
         }
       }
 
@@ -145,5 +163,17 @@ class Capello {
     } else {
       return 'XXX';
     }
+  }
+
+  // retourn le score à afficher
+  void updateScore() {
+    int score = 0;
+
+    plato.forEach((key, value) {
+      score += value.length * value.length;
+    });
+
+    print('nouveau score de $score');
+    scoreNotifier.value = score;
   }
 }

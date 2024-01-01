@@ -135,7 +135,7 @@ class _PickerState extends State<Picker> {
       // pickerStock.value = pastList.map((e) => e.lettre).toList();
     }
 
-    pickerStock.value = pastList.map((e) => e.lettre).toList();
+    pickerStockNotifier.value = pastList.map((e) => e.lettre).toList();
   }
 
   @override
@@ -145,8 +145,8 @@ class _PickerState extends State<Picker> {
     }
 
     // à l'écoute de si une ligne est sélectionnée
-    selectedLine.addListener(() {
-      if (selectedLine.value != 0) {
+    selectedLineNotifier.addListener(() {
+      if (selectedLineNotifier.value != 0) {
         setState(() {
           preserved.clear();
           preserved.addAll(pastList);
@@ -155,8 +155,8 @@ class _PickerState extends State<Picker> {
     });
 
     // à l'écoute de si une ligne libère la sélection
-    playerChoice.addListener(() {
-      if (playerChoice.value == GameAction.cancel) {
+    playerChoiceNotifier.addListener(() {
+      if (playerChoiceNotifier.value == GameAction.cancel) {
         List<Pastille> transfert =
             preserved.where((past) => !pastList.contains(past)).toList();
         print('Picker : $transfert');
@@ -166,7 +166,7 @@ class _PickerState extends State<Picker> {
       } else {
         autoPick();
       }
-      playerChoice.value = GameAction.wait;
+      playerChoiceNotifier.value = GameAction.wait;
     });
 
     return Padding(

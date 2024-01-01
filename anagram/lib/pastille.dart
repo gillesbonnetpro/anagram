@@ -50,7 +50,9 @@ class Pastille extends StatelessWidget {
         animation = PastAnim.none;
         return pastille
             .animate()
-            .shimmer(duration: 500.ms, color: Colors.amber);
+            .shimmer(duration: 500.ms, color: Colors.amber)
+            .then(delay: 100.milliseconds)
+            .animate(effects: List.empty());
       case PastAnim.refused:
         return pastille.animate(onComplete: (ctrl) {
           animation = PastAnim.none;
