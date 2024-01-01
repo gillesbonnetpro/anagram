@@ -41,12 +41,6 @@ class _GameBoardState extends State<GameBoard> {
                   children: lineList,
                 ),
               ),
-              /* ListView.builder(
-                itemCount: lineList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return WordLine(id: index + 1);
-                },
-              ), */
             ),
             Row(
               mainAxisSize: MainAxisSize.max,

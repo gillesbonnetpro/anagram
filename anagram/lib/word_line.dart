@@ -137,80 +137,82 @@ class _WordLineState extends State<WordLine> {
               ],
             ),
           ),
-          DragTarget<Pastille>(
-            onWillAccept: (pastille) =>
-                accepted.length < 10 &&
-                (widget.isSelected || !widget.isOneSelected),
-            onAccept: (pastille) {
-              if (!widget.isSelected) {
-                selectedLine.value = widget.id;
-              }
-              setState(() {
-                accepted.add(pastille);
-              });
-              print(
-                  'ligne actuelle : ${widget.id} - selected ? ${widget.isSelected}');
-            },
-            onLeave: null,
-            builder: (context, candidates, rejected) => Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: widget.isSelected ||
-                        (candidates.isNotEmpty && !widget.isOneSelected)
-                    ? Colors.amber
-                    : Colors.grey,
-              ),
-              height: 60,
-              width: 700,
-              child: Stack(children: [
-                ReorderableListView(
-                  proxyDecorator: (child, index, animation) => child,
-                  padding: EdgeInsets.zero,
-                  buildDefaultDragHandles: false,
-                  scrollDirection: Axis.horizontal,
-                  onReorder: (int oldIndex, int newIndex) {
-                    setState(() {
-                      if (oldIndex < newIndex) {
-                        newIndex -= 1;
-                      }
-                      final Pastille item = accepted.removeAt(oldIndex);
-                      accepted.insert(newIndex, item);
-                    });
-                  },
-                  children: accepted
-                      .map(
-                        (pastille) => widget.isSelected
-                            ? ReorderableDragStartListener(
-                                key: pastille.key,
-                                index: accepted.indexOf(pastille),
-                                child: Container(child: pastille),
-                              )
-                            : IgnorePointer(
-                                key: pastille.key,
-                                child: Container(child: pastille),
-                              ),
-                      )
-                      .toList(),
+          Flexible(
+            child: DragTarget<Pastille>(
+              onWillAccept: (pastille) =>
+                  accepted.length < 10 &&
+                  (widget.isSelected || !widget.isOneSelected),
+              onAccept: (pastille) {
+                if (!widget.isSelected) {
+                  selectedLine.value = widget.id;
+                }
+                setState(() {
+                  accepted.add(pastille);
+                });
+                print(
+                    'ligne actuelle : ${widget.id} - selected ? ${widget.isSelected}');
+              },
+              onLeave: null,
+              builder: (context, candidates, rejected) => Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: widget.isSelected ||
+                          (candidates.isNotEmpty && !widget.isOneSelected)
+                      ? Colors.amber
+                      : Colors.grey,
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FittedBox(
-                    child: Opacity(
-                      opacity: 0.3,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Text(
-                          widget.id.toString(),
-                          style: const TextStyle(
-                              fontSize: 20, color: Colors.amber),
+                height: 60,
+                width: 700,
+                child: Stack(children: [
+                  ReorderableListView(
+                    proxyDecorator: (child, index, animation) => child,
+                    padding: EdgeInsets.zero,
+                    buildDefaultDragHandles: false,
+                    scrollDirection: Axis.horizontal,
+                    onReorder: (int oldIndex, int newIndex) {
+                      setState(() {
+                        if (oldIndex < newIndex) {
+                          newIndex -= 1;
+                        }
+                        final Pastille item = accepted.removeAt(oldIndex);
+                        accepted.insert(newIndex, item);
+                      });
+                    },
+                    children: accepted
+                        .map(
+                          (pastille) => widget.isSelected
+                              ? ReorderableDragStartListener(
+                                  key: pastille.key,
+                                  index: accepted.indexOf(pastille),
+                                  child: Container(child: pastille),
+                                )
+                              : IgnorePointer(
+                                  key: pastille.key,
+                                  child: Container(child: pastille),
+                                ),
+                        )
+                        .toList(),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FittedBox(
+                      child: Opacity(
+                        opacity: 0.3,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Text(
+                            widget.id.toString(),
+                            style: const TextStyle(
+                                fontSize: 20, color: Colors.amber),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ]),
-            ),
-          ).animate(effects: actual),
+                ]),
+              ),
+            ).animate(effects: actual),
+          ),
           if (accepted.isNotEmpty) ...[
             null == suggested || suggested!.length > 1
                 ? IconButton(
