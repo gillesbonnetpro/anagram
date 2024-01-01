@@ -140,7 +140,7 @@ class _WordLineState extends State<WordLine> {
           Flexible(
             child: DragTarget<Pastille>(
               onWillAccept: (pastille) =>
-                  accepted.length < 10 &&
+                  accepted.length < 12 &&
                   (widget.isSelected || !widget.isOneSelected),
               onAccept: (pastille) {
                 if (!widget.isSelected) {

@@ -29,34 +29,37 @@ class _GameBoardState extends State<GameBoard> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  children: lineList,
+      child: Container(
+        width: 800,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: lineList,
+                  ),
                 ),
               ),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Picker(),
-                Tooltip(
-                  message: 'Ajouter une ligne',
-                  child: ElevatedButton(
-                    onPressed: () => addLine(),
-                    child: const Text('+'),
-                  ),
-                )
-              ],
-            )
-          ]),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Expanded(child: Picker()),
+                  Tooltip(
+                    message: 'Ajouter une ligne',
+                    child: ElevatedButton(
+                      onPressed: () => addLine(),
+                      child: const Text('+'),
+                    ),
+                  )
+                ],
+              )
+            ]),
+      ),
     );
   }
 }

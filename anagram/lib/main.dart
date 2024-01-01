@@ -40,22 +40,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    MediaQueryData queryData;
-    queryData = MediaQuery.of(context);
-    Size size = queryData.size;
-
     return FutureBuilder<String?>(
         future: cappello.initiate(),
         builder: (context, snapshot) {
           return snapshot.hasData
               ? Scaffold(
                   appBar: AppBar(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.inversePrimary,
-                      title: FittedBox(
-                        child: Text(snapshot.data!),
-                      ),
-                      actions: [Text('${size.height} / ${size.width}')]),
+                    backgroundColor:
+                        Theme.of(context).colorScheme.inversePrimary,
+                    title: FittedBox(
+                      child: Text(snapshot.data!),
+                    ),
+                  ),
                   body: const GameBoard(),
                 )
               : const Center(child: CircularProgressIndicator());

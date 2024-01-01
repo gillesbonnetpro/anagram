@@ -172,7 +172,7 @@ class _PickerState extends State<Picker> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.deepPurple)),
+        decoration: BoxDecoration(border: Border.all(color: Colors.amber)),
         height: 60,
         child: Row(
           mainAxisSize: MainAxisSize.min,
