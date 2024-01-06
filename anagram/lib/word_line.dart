@@ -94,11 +94,11 @@ class _WordLineState extends State<WordLine> {
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Row(
+      child: Column(
         children: [
           SizedBox(
             width: 40,
-            child: Column(
+            child: Row(
               children: [
                 IconButton(
                   onPressed: () {
@@ -135,6 +135,21 @@ class _WordLineState extends State<WordLine> {
                     size: 20,
                   ),
                 ),
+                if (accepted.isNotEmpty) ...[
+                  null == suggested || suggested!.length > 1
+                      ? IconButton(
+                          onPressed: () => setState(() {
+                            suggested = Capello().searchOpti(getWordAsString());
+                          }),
+                          icon: null == suggested
+                              ? const Icon(Icons.lightbulb)
+                              : const Icon(Icons.close),
+                        )
+                      : Pastille(
+                          lettre: suggested!,
+                          color: Colors.amber,
+                          animation: PastAnim.appear)
+                ]
               ],
             ),
           ),
@@ -214,21 +229,6 @@ class _WordLineState extends State<WordLine> {
               ),
             ).animate(effects: actual),
           ),
-          if (accepted.isNotEmpty) ...[
-            null == suggested || suggested!.length > 1
-                ? IconButton(
-                    onPressed: () => setState(() {
-                      suggested = Capello().searchOpti(getWordAsString());
-                    }),
-                    icon: null == suggested
-                        ? const Icon(Icons.lightbulb)
-                        : const Icon(Icons.close),
-                  )
-                : Pastille(
-                    lettre: suggested!,
-                    color: Colors.amber,
-                    animation: PastAnim.appear)
-          ]
         ],
       ),
     );

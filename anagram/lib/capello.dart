@@ -167,6 +167,7 @@ class Capello {
 
   // retourn le score à afficher
   void updateScore() {
+    print('update score');
     int score = 0;
 
     plato.forEach((key, value) {

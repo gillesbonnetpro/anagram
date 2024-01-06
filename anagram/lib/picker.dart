@@ -172,29 +172,34 @@ class _PickerState extends State<Picker> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.amber)),
-        height: 60,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: pastList
-              .map(
-                (pastille) => Draggable<Pastille>(
-                  data: pastille,
-                  feedback: pastille,
-                  childWhenDragging: Opacity(
-                    opacity: 0.5,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.amber),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Wrap(
+            alignment: WrapAlignment.start,
+            runAlignment: WrapAlignment.center,
+            runSpacing: 8.0,
+            children: pastList
+                .map(
+                  (pastille) => Draggable<Pastille>(
+                    data: pastille,
+                    feedback: pastille,
+                    childWhenDragging: Opacity(
+                      opacity: 0.5,
+                      child: pastille,
+                    ),
                     child: pastille,
+                    onDragCompleted: () {
+                      setState(() {
+                        pastList.removeWhere((past) => past == pastille);
+                      });
+                    },
                   ),
-                  child: pastille,
-                  onDragCompleted: () {
-                    setState(() {
-                      pastList.removeWhere((past) => past == pastille);
-                    });
-                  },
-                ),
-              )
-              .toList(),
+                )
+                .toList(),
+          ),
         ),
       ),
     );

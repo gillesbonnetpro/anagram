@@ -40,28 +40,23 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var cappello = Capello();
-  int score = 0;
-  Pastille scorePast =
+  int _score = 0;
+  bool _scoreChanged = false;
+  /*  Pastille scorePast =
       Pastille(lettre: '0', color: Colors.blue, animation: PastAnim.none);
-
+ */
   @override
   Widget build(BuildContext context) {
     scoreNotifier.addListener(() {
-      setState(() {
-        score = scoreNotifier.value;
-        scorePast = Pastille(
-            lettre: score.toString(),
-            color: Colors.purple,
-            animation: PastAnim.validated);
-      });
-      Future.delayed(const Duration(milliseconds: 3000)).then(
-        (_) => setState(() {
-          scorePast = Pastille(
-              lettre: scorePast.lettre,
-              color: scorePast.color,
-              animation: PastAnim.none);
-        }),
-      );
+      print(
+          'value ${scoreNotifier.value} - score : $_score - ${scoreNotifier.value > _score}');
+      if (scoreNotifier.value > _score) {
+        setState(() {
+          _score = scoreNotifier.value;
+          _scoreChanged = !_scoreChanged;
+          print('changed $_scoreChanged');
+        });
+      }
     });
 
     return FutureBuilder<String?>(
@@ -76,7 +71,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text(snapshot.data!),
                     ),
                     actions: [
-                      FittedBox(child: scorePast),
+                      FittedBox(
+                        child: Pastille(
+                                lettre: '$_score',
+                                color: Colors.deepPurple,
+                                animation: PastAnim.none)
+                            .animate(target: _scoreChanged ? 0 : 1)
+                            .shimmer(duration: 1000.ms, color: Colors.amber)
+                            .shake()
+                            .then(delay: 100.milliseconds)
+                            .animate(effects: List.empty()),
+                      ),
                     ],
                   ),
                   body: const GameBoard(),
