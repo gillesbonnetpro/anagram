@@ -10,11 +10,18 @@ class GameBoard extends StatefulWidget {
 }
 
 class _GameBoardState extends State<GameBoard> {
-  List<WordLine> lineList = [
-    WordLine(id: 1),
-    WordLine(id: 2),
-    WordLine(id: 3),
-  ];
+  late List<WordLine> lineList;
+
+  @override
+  void initState() {
+    lineList = [
+      WordLine(id: 1),
+      WordLine(id: 2),
+      WordLine(id: 3),
+    ];
+
+    super.initState();
+  }
 
   void addLine() {
     selectedLineNotifier.value = 0;
@@ -30,19 +37,21 @@ class _GameBoardState extends State<GameBoard> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 800,
+        constraints: const BoxConstraints(maxWidth: 1000),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    children: lineList,
-                  ),
-                ),
+                child: ListView(
+                    shrinkWrap: true,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: [
+                      Column(
+                        children: lineList,
+                      ),
+                    ]),
               ),
               Row(
                 mainAxisSize: MainAxisSize.max,

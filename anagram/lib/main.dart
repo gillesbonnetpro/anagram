@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:anagram/capello.dart';
 import 'package:anagram/game_board.dart';
@@ -5,8 +6,29 @@ import 'package:anagram/notifier.dart';
 import 'package:anagram/pastille.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:window_manager/window_manager.dart';
 
-void main() {
+void main() async {
+  // gestion taille des fenetres desktop
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+    await windowManager.ensureInitialized();
+    WindowOptions windowOptions = const WindowOptions(
+        size: Size(400, 800),
+        center: true,
+        backgroundColor: Colors.transparent,
+        skipTaskbar: false,
+        titleBarStyle: TitleBarStyle.normal,
+        title: 'Ana Gram',
+        fullScreen: false);
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.setResizable(true);
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  }
+
   runApp(const MyApp());
 }
 

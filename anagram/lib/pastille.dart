@@ -20,7 +20,7 @@ class Pastille extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double smallWidth = MediaQuery.of(context).size.width * 0.9;
+    double smallWidth = MediaQuery.of(context).size.width * 0.07;
     Widget pastille = Padding(
       padding: const EdgeInsets.all(1.0),
       child: Container(
