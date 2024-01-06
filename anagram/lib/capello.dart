@@ -86,7 +86,7 @@ class Capello {
 
   // cherche si un mot avec une lettre de + est possible
   String searchOpti(String basis) {
-    if (basis.length > 2) {
+    if (basis.length > 2 && basis.length < 13) {
       List<String> basisLetters = [];
       List<String> solutionLetters = [];
       Map<String, List<String>> solution = {};
