@@ -188,10 +188,13 @@ class _PickerState extends State<Picker> {
                   .map(
                     (pastille) => Draggable<Pastille>(
                       data: pastille,
-                      feedback: pastille.animate().scale(
+                      feedback: pastille
+                          .animate()
+                          .scale(
                             begin: const Offset(1, 1),
                             end: const Offset(2.5, 2.5),
-                          ),
+                          )
+                          .moveY(end: -70),
                       childWhenDragging: Opacity(
                         opacity: 0.5,
                         child: pastille,
