@@ -25,6 +25,7 @@ class _WordLineState extends State<WordLine> {
   List<Pastille> accepted = [];
   List<Pastille> preserved = [];
   String? suggested;
+  late double pastMaxSize;
 
   List<Effect> shake = [ShakeEffect(duration: 1.seconds)];
   List<Effect> none = [];
@@ -46,10 +47,12 @@ class _WordLineState extends State<WordLine> {
       accepted = accepted
           .map(
             (past) => Pastille(
-                key: past.key,
-                lettre: past.lettre,
-                color: Colors.deepPurple,
-                animation: PastAnim.validated),
+              key: past.key,
+              lettre: past.lettre,
+              color: Colors.deepPurple,
+              animation: PastAnim.validated,
+              maxSize: pastMaxSize,
+            ),
           )
           .toList();
     });
@@ -70,6 +73,9 @@ class _WordLineState extends State<WordLine> {
 
   @override
   Widget build(BuildContext context) {
+// gestion de la taille de la pastille selon le nombre et la taille écran
+    pastMaxSize = (MediaQuery.of(context).size.width * 0.9) / 12;
+
 // à l'écoute de si une ligne est sélectionnée
     selectedLineNotifier.addListener(() {
       setState(() {
@@ -157,7 +163,8 @@ class _WordLineState extends State<WordLine> {
                       : Pastille(
                           lettre: suggested!,
                           color: Colors.amber,
-                          animation: PastAnim.appear)
+                          animation: PastAnim.appear,
+                          maxSize: pastMaxSize)
                 ]
               ],
             ),
@@ -242,9 +249,9 @@ class _WordLineState extends State<WordLine> {
                 ),
               ]),
             ),
-          ).animate(effects: actual),
+          )
         ],
-      ),
+      ).animate(effects: actual),
     );
   }
 }

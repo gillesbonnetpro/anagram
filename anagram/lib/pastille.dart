@@ -5,35 +5,33 @@ class Pastille extends StatelessWidget {
   final String lettre;
   final Color color;
   PastAnim animation;
+  double maxSize;
 
   Pastille(
       {super.key,
       required this.lettre,
       required this.color,
-      required this.animation});
-
-  TextStyle style = const TextStyle(
-      color: Colors.white,
-      fontWeight: FontWeight.w500,
-      fontSize: 50,
-      decoration: TextDecoration.none);
+      required this.animation,
+      required this.maxSize});
 
   @override
   Widget build(BuildContext context) {
-    double smallWidth = MediaQuery.of(context).size.width * 0.07;
+    TextStyle style = TextStyle(
+        color: color,
+        fontWeight: FontWeight.w500,
+        fontSize: 50,
+        decoration: TextDecoration.none);
+
     Widget pastille = Padding(
       padding: const EdgeInsets.all(1.0),
       child: Container(
-        constraints:
-            BoxConstraints(maxHeight: smallWidth, maxWidth: smallWidth),
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
+        constraints: BoxConstraints(maxHeight: maxSize, maxWidth: maxSize),
+        decoration: const BoxDecoration(
           shape: BoxShape.circle,
-          color: color,
+          //color: color,
         ),
-        child: Center(
-          child: FittedBox(
+        child: FittedBox(
+          child: Center(
             child: Text(
               lettre,
               style: style,

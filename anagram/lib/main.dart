@@ -15,7 +15,7 @@ void main() async {
   if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
     await windowManager.ensureInitialized();
     WindowOptions windowOptions = const WindowOptions(
-        size: Size(400, 800),
+        size: Size(300, 800),
         center: true,
         backgroundColor: Colors.transparent,
         skipTaskbar: false,
@@ -97,7 +97,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Pastille(
                                 lettre: '$_score',
                                 color: Colors.deepPurple,
-                                animation: PastAnim.none)
+                                animation: PastAnim.none,
+                                maxSize: 50)
                             .animate(target: _scoreChanged ? 0 : 1)
                             .shimmer(duration: 1000.ms, color: Colors.amber)
                             .shake()
