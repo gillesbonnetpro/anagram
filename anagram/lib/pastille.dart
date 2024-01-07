@@ -21,8 +21,23 @@ class _PastilleState extends State<Pastille> {
   @override
   Widget build(BuildContext context) {
     Widget pastille = RegExp(r'^[a-zA-Z]+$').hasMatch(widget.lettre)
-        ? Image(
-            image: AssetImage('assets/res/lettres/${widget.lettre}.png'),
+        ? Container(
+            constraints: const BoxConstraints(
+                /*minWidth: 30,*/ maxWidth: 50, minHeight: 30, maxHeight: 70),
+            width: MediaQuery.of(context).size.width / 14,
+            height: MediaQuery.of(context).size.width / 14,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                  'assets/res/lettres/${widget.lettre}.png',
+                ),
+                //fit: BoxFit.fitWidth
+              ),
+            ),
+            /* child: Image(
+              image: AssetImage('assets/res/lettres/${widget.lettre}.png'),
+              width: MediaQuery.of(context).size.width / 14,
+              fit: BoxFit.fitHeight), */
           )
         : Text(widget.lettre);
 

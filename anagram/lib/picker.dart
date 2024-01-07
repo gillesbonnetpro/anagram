@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:anagram/notifier.dart';
 import 'package:anagram/pastille.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class Picker extends StatefulWidget {
   const Picker({super.key});
@@ -178,28 +179,33 @@ class _PickerState extends State<Picker> {
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Wrap(
-            alignment: WrapAlignment.start,
-            runAlignment: WrapAlignment.center,
-            runSpacing: 8.0,
-            children: pastList
-                .map(
-                  (pastille) => Draggable<Pastille>(
-                    data: pastille,
-                    feedback: pastille,
-                    childWhenDragging: Opacity(
-                      opacity: 0.5,
+          child: IntrinsicHeight(
+            child: Wrap(
+              alignment: WrapAlignment.start,
+              runAlignment: WrapAlignment.center,
+              runSpacing: 8.0,
+              children: pastList
+                  .map(
+                    (pastille) => Draggable<Pastille>(
+                      data: pastille,
+                      feedback: pastille.animate().scale(
+                            begin: const Offset(1, 1),
+                            end: const Offset(2.5, 2.5),
+                          ),
+                      childWhenDragging: Opacity(
+                        opacity: 0.5,
+                        child: pastille,
+                      ),
                       child: pastille,
+                      onDragCompleted: () {
+                        setState(() {
+                          pastList.removeWhere((past) => past == pastille);
+                        });
+                      },
                     ),
-                    child: pastille,
-                    onDragCompleted: () {
-                      setState(() {
-                        pastList.removeWhere((past) => past == pastille);
-                      });
-                    },
-                  ),
-                )
-                .toList(),
+                  )
+                  .toList(),
+            ),
           ),
         ),
       ),
