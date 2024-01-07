@@ -121,6 +121,7 @@ class _PickerState extends State<Picker> {
     print('appel autopick');
     while (pastList.length < 10) {
       int rnd = Random().nextInt(letters.length);
+
       setState(() {
         pastList.add(
           Pastille(
@@ -128,7 +129,6 @@ class _PickerState extends State<Picker> {
             color: Colors.purple,
             key: UniqueKey(),
             animation: PastAnim.appear,
-            maxSize: 50,
           ),
         );
         letters.remove(letters[rnd]);

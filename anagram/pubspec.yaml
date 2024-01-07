@@ -68,6 +68,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/res/
+    - assets/res/lettres/
 
 
 

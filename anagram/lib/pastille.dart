@@ -1,54 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-class Pastille extends StatelessWidget {
+class Pastille extends StatefulWidget {
   final String lettre;
   final Color color;
   PastAnim animation;
-  double maxSize;
 
-  Pastille(
-      {super.key,
-      required this.lettre,
-      required this.color,
-      required this.animation,
-      required this.maxSize});
+  Pastille({
+    super.key,
+    required this.lettre,
+    required this.color,
+    required this.animation,
+  });
 
   @override
+  State<Pastille> createState() => _PastilleState();
+}
+
+class _PastilleState extends State<Pastille> {
+  @override
   Widget build(BuildContext context) {
-    TextStyle style = TextStyle(
-        color: color,
-        fontWeight: FontWeight.w500,
-        fontSize: 50,
-        decoration: TextDecoration.none);
+    Widget pastille = RegExp(r'^[a-zA-Z]+$').hasMatch(widget.lettre)
+        ? Image(
+            image: AssetImage('assets/res/lettres/${widget.lettre}.png'),
+          )
+        : Text(widget.lettre);
 
-    Widget pastille = Padding(
-      padding: const EdgeInsets.all(1.0),
-      child: Container(
-        constraints: BoxConstraints(maxHeight: maxSize, maxWidth: maxSize),
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          //color: color,
-        ),
-        child: FittedBox(
-          child: Center(
-            child: Text(
-              lettre,
-              style: style,
-            ),
-          ),
-        ),
-      ),
-    );
-
-    switch (animation) {
+    switch (widget.animation) {
       case PastAnim.appear:
-        animation = PastAnim.none;
+        widget.animation = PastAnim.none;
         return pastille
             .animate()
             .scale(duration: 1000.ms, curve: Curves.easeInOutBack);
       case PastAnim.validated:
-        animation = PastAnim.none;
+        widget.animation = PastAnim.none;
         return pastille
             .animate()
             .shimmer(duration: 500.ms, color: Colors.amber)
@@ -56,7 +41,7 @@ class Pastille extends StatelessWidget {
             .animate(effects: List.empty());
       case PastAnim.refused:
         return pastille.animate(onComplete: (ctrl) {
-          animation = PastAnim.none;
+          widget.animation = PastAnim.none;
           ctrl.reset();
         }).shake(duration: 1000.ms);
       case PastAnim.none:

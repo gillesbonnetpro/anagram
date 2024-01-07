@@ -64,9 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var cappello = Capello();
   int _score = 0;
   bool _scoreChanged = false;
-  /*  Pastille scorePast =
-      Pastille(lettre: '0', color: Colors.blue, animation: PastAnim.none);
- */
+
   @override
   Widget build(BuildContext context) {
     scoreNotifier.addListener(() {
@@ -93,18 +91,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text(snapshot.data!),
                     ),
                     actions: [
-                      FittedBox(
-                        child: Pastille(
-                                lettre: '$_score',
-                                color: Colors.deepPurple,
-                                animation: PastAnim.none,
-                                maxSize: 50)
-                            .animate(target: _scoreChanged ? 0 : 1)
-                            .shimmer(duration: 1000.ms, color: Colors.amber)
-                            .shake()
-                            .then(delay: 100.milliseconds)
-                            .animate(effects: List.empty()),
-                      ),
+                      Pastille(
+                        lettre: '$_score',
+                        color: Colors.deepPurple,
+                        animation: PastAnim.none,
+                      )
+                          .animate(target: _scoreChanged ? 0 : 1)
+                          .shimmer(duration: 1000.ms, color: Colors.amber)
+                          .shake()
+                          .then(delay: 100.milliseconds)
+                          .animate(effects: List.empty()),
                     ],
                   ),
                   body: const GameBoard(),

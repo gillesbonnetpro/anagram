@@ -51,7 +51,6 @@ class _WordLineState extends State<WordLine> {
               lettre: past.lettre,
               color: Colors.deepPurple,
               animation: PastAnim.validated,
-              maxSize: pastMaxSize,
             ),
           )
           .toList();
@@ -74,7 +73,14 @@ class _WordLineState extends State<WordLine> {
   @override
   Widget build(BuildContext context) {
 // gestion de la taille de la pastille selon le nombre et la taille écran
-    pastMaxSize = (MediaQuery.of(context).size.width * 0.9) / 12;
+    pastMaxSize = (MediaQuery.of(context).size.width * 0.5) / 12;
+    if (pastMaxSize > 40) {
+      pastMaxSize = 40;
+    }
+
+    if (pastMaxSize < 30) {
+      pastMaxSize = 30;
+    }
 
 // à l'écoute de si une ligne est sélectionnée
     selectedLineNotifier.addListener(() {
@@ -164,90 +170,104 @@ class _WordLineState extends State<WordLine> {
                           lettre: suggested!,
                           color: Colors.amber,
                           animation: PastAnim.appear,
-                          maxSize: pastMaxSize)
+                        )
                 ]
               ],
             ),
           ),
-          DragTarget<Pastille>(
-            onWillAccept: (pastille) =>
-                accepted.length < 12 &&
-                (widget.isSelected || !widget.isOneSelected),
-            onAccept: (pastille) {
-              if (!widget.isSelected) {
-                selectedLineNotifier.value = widget.id;
-              }
-              setState(() {
-                accepted.add(pastille);
-              });
-              print(
-                  'ligne actuelle : ${widget.id} - selected ? ${widget.isSelected}');
-            },
-            onLeave: null,
-            builder: (context, candidates, rejected) => Container(
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
-                  topLeft: Radius.circular(20),
-                ),
-                color: widget.isSelected ||
-                        (candidates.isNotEmpty && !widget.isOneSelected)
-                    ? Colors.amber
-                    : Colors.grey,
-              ),
-              height: 60,
-              width: MediaQuery.of(context).size.width * 0.99,
-              child: Stack(children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: ReorderableListView(
-                    proxyDecorator: (child, index, animation) => child,
-                    padding: EdgeInsets.zero,
-                    buildDefaultDragHandles: false,
-                    scrollDirection: Axis.horizontal,
-                    onReorder: (int oldIndex, int newIndex) {
-                      setState(() {
-                        if (oldIndex < newIndex) {
-                          newIndex -= 1;
-                        }
-                        final Pastille item = accepted.removeAt(oldIndex);
-                        accepted.insert(newIndex, item);
-                      });
-                    },
-                    children: accepted
-                        .map(
-                          (pastille) => widget.isSelected
-                              ? ReorderableDragStartListener(
-                                  key: pastille.key,
-                                  index: accepted.indexOf(pastille),
-                                  child: Container(child: pastille),
-                                )
-                              : IgnorePointer(
-                                  key: pastille.key,
-                                  child: Container(child: pastille),
-                                ),
-                        )
-                        .toList(),
+          Center(
+            child: DragTarget<Pastille>(
+              onWillAccept: (pastille) =>
+                  accepted.length < 12 &&
+                  (widget.isSelected || !widget.isOneSelected),
+              onAccept: (pastille) {
+                if (!widget.isSelected) {
+                  selectedLineNotifier.value = widget.id;
+                }
+                setState(() {
+                  accepted.add(pastille);
+                });
+                print(
+                    'ligne actuelle : ${widget.id} - selected ? ${widget.isSelected}');
+              },
+              onLeave: null,
+              builder: (context, candidates, rejected) => Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                    topLeft: Radius.circular(20),
                   ),
+                  color: widget.isSelected ||
+                          (candidates.isNotEmpty && !widget.isOneSelected)
+                      ? Colors.amber
+                      : Colors.grey,
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FittedBox(
-                    child: Opacity(
-                      opacity: 0.3,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Text(
-                          widget.id.toString(),
-                          style: const TextStyle(
-                              fontSize: 20, color: Colors.amber),
+                height: 60,
+                width: MediaQuery.of(context).size.width * 0.99,
+                child: Stack(children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: ReorderableListView(
+                      proxyDecorator: (child, index, animation) => child,
+                      padding: EdgeInsets.zero,
+                      buildDefaultDragHandles: false,
+                      scrollDirection: Axis.horizontal,
+                      onReorder: (int oldIndex, int newIndex) {
+                        setState(() {
+                          if (oldIndex < newIndex) {
+                            newIndex -= 1;
+                          }
+                          final Pastille item = accepted.removeAt(oldIndex);
+                          accepted.insert(newIndex, item);
+                        });
+                      },
+                      children: accepted
+                          .map(
+                            (pastille) => widget.isSelected
+                                ? ReorderableDragStartListener(
+                                    key: pastille.key,
+                                    index: accepted.indexOf(pastille),
+                                    child: Center(
+                                      child: Pastille(
+                                        lettre: pastille.lettre,
+                                        color: pastille.color,
+                                        animation: PastAnim.none,
+                                      ),
+                                    ),
+                                  )
+                                : IgnorePointer(
+                                    key: pastille.key,
+                                    child: Center(
+                                      child: Pastille(
+                                        lettre: pastille.lettre,
+                                        color: pastille.color,
+                                        animation: PastAnim.validated,
+                                      ),
+                                    ),
+                                  ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FittedBox(
+                      child: Opacity(
+                        opacity: 0.3,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Text(
+                            widget.id.toString(),
+                            style: const TextStyle(
+                                fontSize: 20, color: Colors.amber),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ]),
+                ]),
+              ),
             ),
           )
         ],
