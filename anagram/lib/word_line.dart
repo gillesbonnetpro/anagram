@@ -25,7 +25,6 @@ class _WordLineState extends State<WordLine> {
   List<Pastille> accepted = [];
   List<Pastille> preserved = [];
   String? suggested;
-  late double pastMaxSize;
 
   List<Effect> shake = [ShakeEffect(duration: 1.seconds)];
   List<Effect> none = [];
@@ -72,16 +71,6 @@ class _WordLineState extends State<WordLine> {
 
   @override
   Widget build(BuildContext context) {
-// gestion de la taille de la pastille selon le nombre et la taille écran
-    pastMaxSize = (MediaQuery.of(context).size.width * 0.5) / 12;
-    if (pastMaxSize > 40) {
-      pastMaxSize = 40;
-    }
-
-    if (pastMaxSize < 30) {
-      pastMaxSize = 30;
-    }
-
 // à l'écoute de si une ligne est sélectionnée
     selectedLineNotifier.addListener(() {
       setState(() {
@@ -106,73 +95,102 @@ class _WordLineState extends State<WordLine> {
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Wrap(
-        alignment: WrapAlignment.end,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+          Transform.translate(
+            offset: const Offset(0, 3),
+            child: Container(
+              decoration: BoxDecoration(
+                border: const Border(
+                  left: BorderSide(
+                    color: Colors.amber,
+                    width: 3.0,
+                  ),
+                  top: BorderSide(
+                    color: Colors.amber,
+                    width: 3.0,
+                  ),
+                  right: BorderSide(
+                    color: Colors.amber,
+                    width: 3.0,
+                  ),
+                ),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+                color: widget.isSelected ? Colors.amber : Colors.white,
               ),
-              color: Colors.grey,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    if (widget.isSelected) {
-                      Capello().checkWord(
-                              widget.id, getWordAsString().toUpperCase())
-                          ? validated()
-                          : refused();
-                    } else {
-                      print('Valide sur ligne non selectionnée');
-                    }
-                  },
-                  icon: const Icon(
-                    Icons.check_circle,
-                    size: 20,
-                    color: Colors.deepPurpleAccent,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (widget.isSelected) {
+                        Capello().checkWord(
+                                widget.id, getWordAsString().toUpperCase())
+                            ? validated()
+                            : refused();
+                      } else {
+                        print('Valide sur ligne non selectionnée');
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.check_circle,
+                      size: 20,
+                      color: Colors.deepPurpleAccent,
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    if (widget.isSelected) {
-                      setState(() {
-                        accepted.clear();
-                        accepted = [...preserved];
-                      });
-                      playerChoiceNotifier.value = GameAction.cancel;
-                    } else {
-                      // todo informer user
-                      print('Cancel sur ligne non selectionnée');
-                    }
-                  },
-                  icon: const Icon(
-                    Icons.close,
-                    size: 20,
+                  IconButton(
+                    onPressed: () {
+                      if (widget.isSelected) {
+                        setState(() {
+                          accepted.clear();
+                          accepted = [...preserved];
+                        });
+                        playerChoiceNotifier.value = GameAction.cancel;
+                      } else {
+                        // todo informer user
+                        print('Cancel sur ligne non selectionnée');
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.close,
+                      size: 20,
+                    ),
                   ),
-                ),
-                if (accepted.isNotEmpty) ...[
-                  null == suggested || suggested!.length > 1
-                      ? IconButton(
-                          onPressed: () => setState(() {
-                            suggested = Capello().searchOpti(getWordAsString());
-                          }),
-                          icon: null == suggested
-                              ? const Icon(Icons.lightbulb)
-                              : const Icon(Icons.close),
-                        )
-                      : Pastille(
-                          lettre: suggested!,
-                          color: Colors.amber,
-                          animation: PastAnim.appear,
-                        )
-                ]
-              ],
+                  if (accepted.isNotEmpty) ...[
+                    null == suggested || suggested!.length > 1
+                        ? IconButton(
+                            onPressed: () => setState(() {
+                              suggested =
+                                  Capello().searchOpti(getWordAsString());
+                            }),
+                            icon: null == suggested
+                                ? const Icon(Icons.lightbulb)
+                                : const Icon(Icons.close),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              constraints: const BoxConstraints(maxHeight: 20),
+                              width: 24,
+                              child: Image(
+                                image: AssetImage(
+                                    'assets/res/lettres/${suggested!}.png'),
+                              ),
+                            )
+
+                            /* Text(
+                              suggested!,
+                              style: const TextStyle().copyWith(fontSize: 25),
+                            ), */
+                            )
+                  ]
+                ],
+              ),
             ),
           ),
           Center(
@@ -194,6 +212,10 @@ class _WordLineState extends State<WordLine> {
                 onLeave: null,
                 builder: (context, candidates, rejected) => Container(
                   decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.amber,
+                      width: 3.0,
+                    ),
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(20),
                       bottomRight: Radius.circular(20),
@@ -202,7 +224,7 @@ class _WordLineState extends State<WordLine> {
                     color: widget.isSelected ||
                             (candidates.isNotEmpty && !widget.isOneSelected)
                         ? Colors.amber
-                        : Colors.grey,
+                        : Colors.white,
                   ),
                   height: 60,
                   width: MediaQuery.of(context).size.width * 0.99,

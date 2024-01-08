@@ -189,7 +189,9 @@ class _PickerState extends State<Picker> {
                     (pastille) => Draggable<Pastille>(
                       data: pastille,
                       feedback: pastille
-                          .animate()
+                          .animate(
+                            onComplete: (controller) => controller.reverse(),
+                          )
                           .scale(
                             begin: const Offset(1, 1),
                             end: const Offset(2.5, 2.5),
